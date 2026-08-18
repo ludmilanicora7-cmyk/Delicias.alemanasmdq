@@ -647,3 +647,101 @@ select {
   .motivo-decorativo .filete  { max-width: 6rem; }
   .sol-arg { width: 3rem; height: 3rem; top: 1.4rem; right: 2.2rem; }
 }
+
+/* ═══════════════════════════════════════════
+   BARRA DE INSTALACIÓN
+   ═══════════════════════════════════════════
+   Solo aparece si el celular puede instalar la app y todavía
+   no la tiene. Con "Ahora no" no vuelve a molestar. */
+
+.instalar-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .9rem 1.4rem;
+  max-width: var(--ancho);
+  margin: 1.4rem auto 0;
+  padding: 1.1rem 1.2rem;
+  background: var(--papel-alto);
+  border: 1px solid var(--linea-oro);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-ficha);
+  text-align: center;
+}
+
+.instalar-texto {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+.instalar-texto strong {
+  font-family: "Spectral", Georgia, serif;
+  font-size: 1.15rem;
+}
+.instalar-texto span {
+  font-size: .97rem;
+  color: var(--tinta-2);
+  text-wrap: pretty;
+}
+
+.instalar-acciones {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.btn-instalar {
+  min-height: 52px;
+  padding: .8rem 1.6rem;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #FBF7EC;
+  background: var(--borgona);
+  border: 1px solid var(--borgona);
+  border-radius: var(--radio-chico);
+  cursor: pointer;
+  transition: background .16s ease;
+}
+.btn-instalar:hover { background: var(--borgona-alto); }
+
+.btn-cerrar-barra {
+  min-height: 52px;
+  padding: .8rem 1.1rem;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--tinta-2);
+  background: transparent;
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio-chico);
+  cursor: pointer;
+}
+.btn-cerrar-barra:hover { border-color: var(--tinta-2); color: var(--tinta); }
+
+/* Instrucciones para iPhone */
+.instalar-ios {
+  max-width: var(--ancho);
+  margin: 1.4rem auto 0;
+  padding: 1.3rem 1.4rem;
+  background: var(--papel-alto);
+  border: 1px solid var(--linea-oro);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-ficha);
+}
+.instalar-ios p {
+  margin: 0 0 .7rem;
+  font-family: "Spectral", Georgia, serif;
+  font-size: 1.15rem;
+}
+.instalar-ios ol {
+  margin: 0 0 1.1rem;
+  padding-left: 1.3rem;
+  color: var(--tinta-2);
+}
+.instalar-ios li { margin-bottom: .45rem; }
+.instalar-ios .btn-cerrar-barra { width: 100%; }
+
+@media (min-width: 34rem) {
+  .instalar-barra { justify-content: space-between; text-align: left; }
+}
