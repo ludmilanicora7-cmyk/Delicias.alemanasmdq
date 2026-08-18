@@ -4,7 +4,7 @@
 // y que sigan funcionando sin conexión una vez cargadas.
 // ═══════════════════════════════════════
 
-const CACHE_NAME = "delicias-cache-v9";
+const CACHE_NAME = "delicias-cache-v10";
 
 const ASSETS = [
   "./index.html",
