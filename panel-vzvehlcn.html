@@ -20,11 +20,80 @@
 <body>
 
 <!-- ===================== LOGIN ===================== -->
+<!-- ═══════════════════════════════════════════════════
+     ÍCONOS DIBUJADOS A MEDIDA
+     Repostería alemana de verdad: Brezel (pretzel), Strudel,
+     Kreppel y Kuchen. Los emojis del sistema no tienen ninguno
+     de estos — solo magdalenas y tortas genéricas.
+     Se dibujan con la misma línea que la espiga de la portada.
+     ═══════════════════════════════════════════════════ -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="ico-brezel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5.5 14.5C2.8 12.5 3.4 7.8 7.2 7.8c2.6 0 4.1 2.3 4.8 4.6"/>
+    <path d="M18.5 14.5c2.7-2 2.1-6.7-1.7-6.7-2.6 0-4.1 2.3-4.8 4.6"/>
+    <path d="M5.5 14.5c1.9 3.4 11.1 3.4 13 0"/>
+    <path d="M12 12.4v3.6"/>
+  </symbol>
+  <symbol id="ico-strudel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6.5 8h11a3.5 4 0 0 1 0 8h-11a3.5 4 0 0 1 0-8z"/>
+    <path d="M6.5 9.6a2.4 2.4 0 0 0 0 4.8 2.4 2.4 0 0 0 0-4.8"/>
+    <path d="M11.5 8.4l-1.6 7.2M15 8.4l-1.6 7.2"/>
+  </symbol>
+  <symbol id="ico-kreppel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="13" r="7"/>
+    <path d="M6.6 8.6c2.4 1.6 8.4 1.6 10.8 0"/>
+    <path d="M9.5 4.6l.6 1.4M12 3.8l.2 1.6M14.6 4.6l-.6 1.4"/>
+  </symbol>
+  <symbol id="ico-kuchen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 19h16v-7H4z"/>
+    <path d="M4 12c0-2.2 3.6-4 8-4s8 1.8 8 4"/>
+    <path d="M7.5 8V5.4M12 8V4.6M16.5 8V5.4"/>
+  </symbol>
+  <symbol id="ico-libreta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/>
+    <path d="M9.5 8h5M9.5 12h5"/>
+  </symbol>
+  <symbol id="ico-caja" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="12" cy="6.5" rx="7.5" ry="2.8"/>
+    <path d="M4.5 6.5v11c0 1.6 3.4 2.8 7.5 2.8s7.5-1.2 7.5-2.8v-11"/>
+    <path d="M4.5 12c0 1.6 3.4 2.8 7.5 2.8s7.5-1.2 7.5-2.8"/>
+  </symbol>
+  <symbol id="ico-reloj" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12.5" r="8"/>
+    <path d="M12 8v4.5l3 2"/>
+  </symbol>
+  <symbol id="ico-engranaje" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1M18.7 18.7l-2.1-2.1M7.4 7.4L5.3 5.3"/>
+  </symbol>
+  <symbol id="ico-telefono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 3h10a1.5 1.5 0 0 1 1.5 1.5v15A1.5 1.5 0 0 1 17 21H7a1.5 1.5 0 0 1-1.5-1.5v-15A1.5 1.5 0 0 1 7 3z"/>
+    <path d="M10.5 18h3"/>
+  </symbol>
+  <symbol id="ico-reloj-arena" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 3h10M7 21h10"/>
+    <path d="M7 3v3.5c0 2 5 3.8 5 5.5s-5 3.5-5 5.5V21"/>
+    <path d="M17 3v3.5c0 2-5 3.8-5 5.5s5 3.5 5 5.5V21"/>
+  </symbol>
+  <symbol id="ico-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 3h14v18l-2.3-1.6L14.4 21l-2.4-1.6L9.6 21l-2.3-1.6L5 21z"/>
+    <path d="M8.5 8h7M8.5 12h7"/>
+  </symbol>
+  <symbol id="ico-disco" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h12.5L20 7.5V20H4z"/>
+    <path d="M8 4v5h7V4M8 20v-6h8v6"/>
+  </symbol>
+  <symbol id="ico-candado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4.5" y="10.5" width="15" height="10.5" rx="2"/>
+    <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>
+  </symbol>
+</svg>
+
 <div id="loginBox" class="login-box">
   <div class="login-card">
     <img src="logo.jpg" alt="logo" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #c8a24a;margin-bottom:10px;"/>
     <h1>Delicias Alemanas</h1>
-    <p>🍰 Panel Admin</p>
+    <p>Panel Admin</p>
     <input id="loginEmail" type="email" placeholder="Email" autocomplete="username"/>
     <input id="loginPass" type="password" placeholder="Contraseña" autocomplete="current-password"/>
     <p class="error-msg hidden" id="loginError">Email o contraseña incorrectos</p>
@@ -46,36 +115,36 @@
 
   <div class="admin-logo-wrap"><img src="logo.jpg" alt="logo"/></div>
 
-  <h1>🍰 Delicias Alemanas</h1>
+  <h1>Delicias Alemanas</h1>
   <p>Panel Admin</p>
   <div class="admin-hero-botones">
-    <a href="index.html" target="_blank" class="link-btn">👀 Ver vista cliente</a>
+    <a href="index.html" target="_blank" class="link-btn"><svg class="ico" aria-hidden="true"><use href="#ico-strudel"/></svg>Ver vista cliente</a>
     <button class="link-btn" onclick="cerrarSesion()">Cerrar sesión</button>
   </div>
 </header>
 <div class="cinta-alemana"></div>
 
 <nav class="tabs" id="tabs" role="tablist" aria-label="Secciones del panel">
-  <button class="tab activo" role="tab" data-tab="pedidos"   onclick="irTab('pedidos')"   type="button">📋 Pedidos</button>
-  <button class="tab"        role="tab" data-tab="caja"      onclick="irTab('caja')"      type="button">💰 Caja</button>
-  <button class="tab"        role="tab" data-tab="agenda"    onclick="irTab('agenda')"    type="button">🕐 Agenda</button>
-  <button class="tab"        role="tab" data-tab="productos" onclick="irTab('productos')" type="button">🧁 Productos</button>
-  <button class="tab"        role="tab" data-tab="ajustes"   onclick="irTab('ajustes')"   type="button">⚙️ Ajustes</button>
+  <button class="tab activo" role="tab" data-tab="pedidos"   onclick="irTab('pedidos')"   type="button"><svg class="ico" aria-hidden="true"><use href="#ico-libreta"/></svg>Pedidos</button>
+  <button class="tab"        role="tab" data-tab="caja"      onclick="irTab('caja')"      type="button"><svg class="ico" aria-hidden="true"><use href="#ico-caja"/></svg>Caja</button>
+  <button class="tab"        role="tab" data-tab="agenda"    onclick="irTab('agenda')"    type="button"><svg class="ico" aria-hidden="true"><use href="#ico-reloj"/></svg>Agenda</button>
+  <button class="tab"        role="tab" data-tab="productos" onclick="irTab('productos')" type="button"><svg class="ico" aria-hidden="true"><use href="#ico-brezel"/></svg>Productos</button>
+  <button class="tab"        role="tab" data-tab="ajustes"   onclick="irTab('ajustes')"   type="button"><svg class="ico" aria-hidden="true"><use href="#ico-engranaje"/></svg>Ajustes</button>
 </nav>
 
 <main class="admin-main">
 
   <div class="tab-panel" id="tab-pedidos">
   <section class="card">
-    <h2>📋 Pedidos</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-libreta"/></svg>Pedidos</h2>
     <p class="ayuda">Se actualiza solo cada 20 segundos si tenés esta pantalla abierta. También podés forzarlo con el botón.</p>
-    <button class="btn-mini" id="btnActualizarPedidos" onclick="actualizarPedidosManual()" type="button">🔄 Actualizar pedidos</button>
+    <button class="btn-mini" id="btnActualizarPedidos" onclick="actualizarPedidosManual()" type="button">Actualizar pedidos</button>
     <div class="filtros" id="filtrosPedidos"></div>
     <div id="listaPedidos"></div>
   </section>
 
   <section class="card card-destacada">
-    <h2>📞 Cargar pedido manual</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-telefono"/></svg>Cargar pedido manual</h2>
     <p class="ayuda">Para cuando un cliente te pide por teléfono — muy útil con clientes que no manejan bien la web, como algunos de mayor edad. Se agrega directo a "Pedidos", como si lo hubiese cargado el cliente.</p>
 
     <label>Nombre del cliente</label>
@@ -107,55 +176,62 @@
 
     <p class="error-msg hidden" id="manualError"></p>
 
-    <button onclick="agregarPedidoManual()">➕ Agregar pedido</button>
-    <p class="ok-msg hidden" id="manualOk">Pedido agregado ✅</p>
+    <button onclick="agregarPedidoManual()">Agregar pedido</button>
+    <p class="ok-msg hidden" id="manualOk">Pedido agregado</p>
   </section>
   </div>
 
   <div class="tab-panel hidden" id="tab-caja">
   <section class="card card-destacada">
-    <h2>💰 Cobros del mes</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-caja"/></svg>Cobros del mes</h2>
     <p class="ayuda">Cada pago se cuenta en el mes en que entró la plata, no en el del pedido. Si te dan una seña en agosto por una torta de septiembre, ese dinero suma en agosto.</p>
     <div id="resumenMeses"></div>
   </section>
 
   <section class="card">
-    <h2>⏳ Falta cobrar</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-reloj-arena"/></svg>Falta cobrar</h2>
     <p class="ayuda">Pedidos que todavía tienen saldo pendiente. Los cancelados no aparecen.</p>
     <div id="listaDeudores"></div>
   </section>
 
   <section class="card">
-    <h2>🧾 Últimos pagos</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-ticket"/></svg>Últimos pagos</h2>
     <div id="listaPagos"></div>
   </section>
   </div>
 
   <div class="tab-panel hidden" id="tab-agenda">
   <section class="card">
-    <h2>🕐 Días y horarios</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-reloj"/></svg>Días y horarios</h2>
     <p class="ayuda">Activá los días que puede haber pedidos y cargá las franjas horarias. Los demás días aparecen "sin cupo" para el cliente.</p>
 
     <div id="horariosConfig"></div>
 
     <button onclick="guardarHorarios()">Guardar horarios</button>
-    <p class="ok-msg hidden" id="horariosOk">Horarios guardados ✅</p>
+    <p class="ok-msg hidden" id="horariosOk">Horarios guardados</p>
   </section>
   </div>
 
   <div class="tab-panel hidden" id="tab-productos">
   <section class="card">
-    <h2>🧁 Productos</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-brezel"/></svg>Productos</h2>
 
     <div id="listaProductos"></div>
 
     <hr/>
 
-    <h3>➕ Nuevo producto</h3>
+    <h3><svg class="ico" aria-hidden="true"><use href="#ico-kreppel"/></svg>Nuevo producto</h3>
 
     <input id="nombre" placeholder="Nombre"/>
     <input id="precio" type="number" placeholder="Precio"/>
-    <input id="imagen" placeholder="URL imagen (ej: img/torta.jpg)"/>
+    <div class="foto-nueva-box">
+      <div id="previewNueva"><div class="prod-foto-mini prod-foto-vacia">sin foto</div></div>
+      <label class="btn-foto">
+        Subir foto
+        <input type="file" accept="image/*" onchange="subirFotoNueva(this)" hidden/>
+      </label>
+    </div>
+    <input id="imagen" type="hidden"/>
 
     <button onclick="agregarProducto()">Agregar</button>
   </section>
@@ -163,17 +239,17 @@
 
   <div class="tab-panel hidden" id="tab-ajustes">
   <section class="card">
-    <h2>📱 Datos de contacto</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-telefono"/></svg>Datos de contacto</h2>
     <p class="ayuda">Número de WhatsApp al que llegan los pedidos (con código de país, sin +. Ej: 5492234252233)</p>
     <input id="negocioWhatsapp"/>
     <label>Instagram</label>
     <input id="negocioInstagram"/>
     <button onclick="guardarNegocio()">Guardar datos</button>
-    <p class="ok-msg hidden" id="negocioOk">Guardado ✅</p>
+    <p class="ok-msg hidden" id="negocioOk">Guardado</p>
   </section>
 
   <section class="card">
-    <h2>💾 Backup</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-disco"/></svg>Backup</h2>
     <p class="ayuda">Tus productos, horarios y pedidos ya viven en el servidor (Supabase), no dependen de este navegador. Esto es una copia extra de productos/horarios/datos de contacto por las dudas — los pedidos no se incluyen porque ya tienen su historial en el servidor.</p>
     <button onclick="exportarBackup()">Descargar backup</button>
     <input type="file" id="inputBackup" accept="application/json" style="display:none" onchange="importarBackup(event)"/>
@@ -182,11 +258,11 @@
   </section>
 
   <section class="card">
-    <h2>🔒 Contraseña</h2>
+    <h2><svg class="ico" aria-hidden="true"><use href="#ico-candado"/></svg>Contraseña</h2>
     <p class="ayuda">Se cambia tu contraseña real de acceso (validada en el servidor, no en este navegador).</p>
     <input id="nuevaPass" type="password" placeholder="Nueva contraseña (mínimo 6 caracteres)"/>
     <button onclick="cambiarPass()">Cambiar contraseña</button>
-    <p class="ok-msg hidden" id="passOk">Contraseña actualizada ✅</p>
+    <p class="ok-msg hidden" id="passOk">Contraseña actualizada</p>
   </section>
   </div>
 
