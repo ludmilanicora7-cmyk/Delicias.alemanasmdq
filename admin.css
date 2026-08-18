@@ -615,3 +615,333 @@ button {
   .admin-logo-wrap { width: 5.6rem; height: 5.6rem; }
   .pedido-botones .btn-mini { flex: 0 1 auto; }
 }
+
+/* ═══════════════════════════════════════════
+   PESTAÑAS
+   ═══════════════════════════════════════════
+   En celular: fila que se desliza con el dedo.
+   En pantalla ancha: columna fija a la izquierda.
+   La pestaña activa se marca con fondo Y con una barra,
+   no solo con color. */
+
+.tabs {
+  display: flex;
+  gap: .4rem;
+  padding: .8rem 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--papel-alto);
+  border-bottom: 1px solid var(--linea);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex: 0 0 auto;
+  min-height: 46px;
+  padding: .55rem 1.1rem;
+  font-family: inherit;
+  font-size: .98rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--tinta-2);
+  background: var(--papel);
+  border: 1.5px solid var(--linea);
+  border-radius: 999px;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.tab:hover { border-color: var(--oro); }
+.tab.activo {
+  background: var(--borgona);
+  border-color: var(--borgona);
+  color: #FBF7EC;
+  box-shadow: var(--sombra);
+}
+
+.tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* ═══════════════════════════════════════════
+   COBROS DENTRO DEL PEDIDO
+   ═══════════════════════════════════════════ */
+
+.pedido-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+
+.badge-pagado  { background: var(--verde-suave); color: var(--verde); border-color: rgba(46,107,67,.3); }
+.badge-parcial { background: var(--ambar-suave); color: var(--ambar); border-color: rgba(138,91,8,.35); }
+.badge-impago  { background: rgba(107,18,32,.08); color: var(--borgona); border-color: rgba(107,18,32,.3); }
+
+/* Las tres cifras, siempre en el mismo orden y alineadas */
+.pedido-cifras {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5rem;
+  margin: .9rem 0 0;
+  padding: .7rem .2rem;
+  border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+  text-align: center;
+}
+.pedido-cifras > div { display: flex; flex-direction: column; gap: .1rem; }
+.pedido-cifras span {
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--tinta-3);
+}
+.pedido-cifras strong {
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+}
+.pedido-cifras .cifra-pendiente strong { color: var(--borgona); }
+
+.pagos-lista { margin-top: .7rem; }
+
+.pago-row {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .45rem 0;
+  font-size: .93rem;
+  color: var(--tinta-2);
+  border-bottom: 1px dashed var(--linea);
+}
+.pago-row:last-child { border-bottom: 0; }
+.pago-row > span:first-child { flex: 1; min-width: 0; }
+.pago-monto {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--verde);
+  white-space: nowrap;
+}
+.pago-row .btn-x { min-width: 38px; min-height: 38px; font-size: 1rem; }
+
+.pago-row-suelto {
+  padding: .7rem 0;
+  font-size: 1rem;
+  color: var(--tinta);
+}
+
+/* Formulario de cobro */
+.cobro-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .5rem;
+  margin-top: .9rem;
+  padding: .8rem;
+  background: var(--papel-alto);
+  border: 1px dashed var(--linea-oro);
+  border-radius: var(--radio-chico);
+}
+.cobro-form input, .cobro-form select {
+  min-height: 48px;
+  font-size: 1rem;
+}
+.cobro-form input[type="text"] { grid-column: 1 / -1; }
+.btn-cobrar {
+  grid-column: 1 / -1;
+  min-height: 50px;
+  font-weight: 600;
+  color: #FBF7EC;
+  background: var(--verde);
+  border-color: var(--verde);
+}
+.btn-cobrar:hover { background: #245434; border-color: #245434; color: #FBF7EC; }
+
+/* ═══════════════════════════════════════════
+   CAJA
+   ═══════════════════════════════════════════ */
+
+.mes-card {
+  background: var(--papel);
+  border: 1px solid var(--linea);
+  border-left: 5px solid var(--tinta-3);
+  border-radius: 0 var(--radio-chico) var(--radio-chico) 0;
+  padding: .95rem 1.1rem;
+  margin-bottom: .7rem;
+}
+/* El mes en curso, destacado: es el número que más se mira */
+.mes-card.mes-actual {
+  border-left-color: var(--verde);
+  background: var(--papel-alto);
+  box-shadow: var(--sombra);
+}
+
+.mes-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.mes-nombre {
+  font-family: "Spectral", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.mes-total {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--verde);
+}
+.mes-card:not(.mes-actual) .mes-total { color: var(--tinta); }
+
+.mes-detalle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem 1rem;
+  margin-top: .45rem;
+  font-size: .9rem;
+  color: var(--tinta-2);
+}
+
+.deuda-total {
+  padding: .85rem 1rem;
+  margin-bottom: .9rem;
+  background: rgba(107,18,32,.07);
+  border-left: 4px solid var(--borgona);
+  border-radius: 0 var(--radio-chico) var(--radio-chico) 0;
+  color: var(--borgona);
+  font-size: 1.02rem;
+}
+.deuda-total strong { font-variant-numeric: tabular-nums; font-size: 1.15rem; }
+
+.deudor-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .75rem 0;
+  border-bottom: 1px dashed var(--linea);
+}
+.deudor-row:last-child { border-bottom: 0; }
+.deudor-monto {
+  font-weight: 600;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--borgona);
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════
+   PESTAÑAS EN PANTALLA ANCHA: columna izquierda
+   ═══════════════════════════════════════════ */
+
+@media (min-width: 56rem) {
+  .tabs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13.5rem;
+    flex-direction: column;
+    gap: .45rem;
+    padding: 1.5rem .9rem;
+    overflow-y: auto;
+    border-right: 1px solid var(--linea);
+    border-bottom: 0;
+    background: var(--papel-alto);
+  }
+  .tab {
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+    border-radius: var(--radio-chico);
+  }
+  .admin-hero, .cinta-alemana, .admin-main { margin-left: 13.5rem; }
+  .admin-main { max-width: 56rem; }
+  .cobro-form { grid-template-columns: 1fr 1fr auto; }
+  .cobro-form input[type="text"] { grid-column: auto; }
+  .btn-cobrar { grid-column: 1 / -1; }
+}
+
+/* ═══════════════════════════════════════════
+   FOTOS DE PRODUCTOS
+   ═══════════════════════════════════════════ */
+
+.prod-foto-mini {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 auto;
+  border-radius: var(--radio-chico);
+  object-fit: cover;
+  border: 1px solid var(--linea-oro);
+  background: var(--papel-hueco);
+}
+.prod-foto-vacia {
+  display: grid;
+  place-items: center;
+  font-size: .7rem;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--tinta-3);
+  border-style: dashed;
+}
+
+.prod-campos {
+  flex: 1;
+  min-width: 10rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.prod-campos input { min-height: 48px; }
+
+.prod-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+/* El botón de foto es una etiqueta que envuelve un input
+   de archivo escondido: así se ve como botón y abre la
+   galería del celular directamente. */
+.btn-foto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: .55rem 1.1rem;
+  margin: 0;
+  font-family: inherit;
+  font-size: .96rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--borgona);
+  background: var(--papel-alto);
+  border: 1.5px solid var(--borgona);
+  border-radius: var(--radio-chico);
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.btn-foto:hover { background: var(--borgona); color: #FBF7EC; }
+.btn-foto:focus-within { outline: 3px solid var(--borgona); outline-offset: 2px; }
+.btn-foto-cargando { opacity: .65; pointer-events: none; }
+
+.prod-activo {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0;
+  font-size: .92rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.prod-activo input { width: 22px; height: 22px; flex: 0 0 auto; }
+
+.foto-nueva-box {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-top: .9rem;
+}
