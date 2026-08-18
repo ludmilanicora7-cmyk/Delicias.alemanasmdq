@@ -4,7 +4,7 @@
 // y que sigan funcionando sin conexión una vez cargadas.
 // ═══════════════════════════════════════
 
-const CACHE_NAME = "delicias-cache-v4";
+const CACHE_NAME = "delicias-cache-v6";
 
 const ASSETS = [
   "./index.html",
@@ -18,8 +18,8 @@ const ASSETS = [
   "./logo.jpg",
   "./manifest-cliente.json",
   "./manifest-admin.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
