@@ -1,0 +1,256 @@
+/* ═══════════════════════════════════════
+   RECETAS E INSUMOS — ESTILOS
+   Mismo estilo que Delicias Alemanas (crema + negro + dorado)
+═══════════════════════════════════════ */
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f6f1e7;
+  margin: 0;
+  color: #1c1a17;
+}
+
+.hero {
+  background: #1c1a17;
+  color: #c8a24a;
+  text-align: center;
+  padding: 20px 16px;
+}
+
+.hero h1 { margin: 0 0 4px 0; }
+.hero p { margin: 0; font-size: .8rem; opacity: .8; }
+
+/* ===================== TABS ===================== */
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  background: #2a2621;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.tab-btn {
+  flex: 1 0 auto;
+  background: none;
+  border: none;
+  color: #cbbfa8;
+  padding: 12px 14px;
+  font-size: .85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-btn.activo {
+  color: #c8a24a;
+  border-bottom-color: #c8a24a;
+}
+
+.main {
+  max-width: 700px;
+  margin: auto;
+  padding: 16px;
+}
+
+.hidden { display: none !important; }
+
+/* ===================== CARD ===================== */
+.card {
+  background: white;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.08);
+}
+
+.card h2 { margin-top: 0; }
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: .95rem;
+}
+
+button {
+  background: #1c1a17;
+  color: #c8a24a;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 6px;
+  font-size: .95rem;
+}
+
+label { font-size: .85rem; color: #6E665A; }
+
+.ayuda {
+  font-size: .85rem;
+  color: #6E665A;
+}
+
+.ayuda-mini {
+  font-size: .78rem;
+  color: #6E665A;
+}
+
+.ok-msg { color: #1b7a3d; font-size: .85rem; margin-top: 6px; }
+.ok-texto { color: #1b7a3d; font-weight: bold; }
+.error-msg { color: #b5231b; font-size: .82rem; margin-top: 6px; }
+
+/* ===================== ALERTAS ===================== */
+.alerta-item {
+  display: flex;
+  justify-content: space-between;
+  background: #fdecea;
+  border-left: 4px solid #b5231b;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: .88rem;
+}
+
+.mov-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: .82rem;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.mov-positivo { color: #1b7a3d; font-weight: bold; }
+.mov-negativo { color: #b5231b; font-weight: bold; }
+.mov-fecha { color: #999; font-size: .75rem; }
+
+/* ===================== INSUMOS ===================== */
+.insumo-row {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.insumo-row.insumo-bajo {
+  background: #fdf6ee;
+  border-left: 4px solid #d99a2b;
+  padding-left: 8px;
+}
+
+.insumo-linea1 {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.insumo-linea1 input { flex: 1; }
+.insumo-linea1 select { width: auto; }
+
+.insumo-linea2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: .82rem;
+}
+
+.insumo-linea2 input { width: 90px; }
+
+.insumo-linea3 {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.insumo-linea3 input { flex: 1; }
+
+.btn-x {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: .9rem;
+}
+
+.btn-mini {
+  background: #f6f1e7;
+  color: #1c1a17;
+  border: 1px solid #d6c7aa;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: .82rem;
+  cursor: pointer;
+}
+
+.btn-mini-danger {
+  border-color: #e0a8a0;
+  color: #b5231b;
+}
+
+/* ===================== RECETAS ===================== */
+.fila-agregar-insumo {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.fila-agregar-insumo select { flex: 1; }
+.fila-agregar-insumo input { width: 110px; }
+
+.ingrediente-linea {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .88rem;
+  padding: 4px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.receta-card {
+  border: 1px solid #eee;
+  border-left: 4px solid #c8a24a;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.receta-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.receta-insumos {
+  margin: 0 0 8px 0;
+  padding-left: 18px;
+  font-size: .85rem;
+  color: #333;
+}
+
+.receta-botones { display: flex; gap: 8px; }
+
+/* ===================== PRODUCCIÓN ===================== */
+.preview-box {
+  background: #f6f1e7;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.preview-linea {
+  display: flex;
+  justify-content: space-between;
+  font-size: .85rem;
+  padding: 3px 0;
+}
+
+.preview-falta {
+  color: #b5231b;
+  font-weight: bold;
+}

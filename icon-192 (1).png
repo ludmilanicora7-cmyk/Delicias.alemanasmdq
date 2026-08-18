@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recetas e Insumos · Delicias Alemanas</title>
+
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#1c1a17"/>
+  <link rel="apple-touch-icon" href="icons/icon-192.png"/>
+  <link rel="icon" href="icons/icon-192.png"/>
+</head>
+<body>
+
+<header class="hero">
+  <h1>🥧 Recetas e Insumos</h1>
+  <p>Delicias Alemanas · guardado solo en este celular, sin internet</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn activo" data-tab="alertas" onclick="irTab('alertas')">🔔 Alertas</button>
+  <button class="tab-btn" data-tab="insumos" onclick="irTab('insumos')">🧂 Insumos</button>
+  <button class="tab-btn" data-tab="recetas" onclick="irTab('recetas')">📖 Recetas</button>
+  <button class="tab-btn" data-tab="produccion" onclick="irTab('produccion')">🍰 Producción</button>
+  <button class="tab-btn" data-tab="backup" onclick="irTab('backup')">💾 Backup</button>
+</nav>
+
+<main class="main">
+
+  <!-- ===================== ALERTAS ===================== -->
+  <section class="tab-panel" id="tab-alertas">
+    <div class="card">
+      <h2>Stock bajo</h2>
+      <div id="listaAlertas"></div>
+    </div>
+    <div class="card">
+      <h2>Últimos movimientos</h2>
+      <div id="listaMovimientos"></div>
+    </div>
+  </section>
+
+  <!-- ===================== INSUMOS ===================== -->
+  <section class="tab-panel hidden" id="tab-insumos">
+    <div class="card">
+      <h2>Insumos</h2>
+      <div id="listaInsumos"></div>
+    </div>
+
+    <div class="card">
+      <h3>➕ Nuevo insumo</h3>
+      <label>Nombre</label>
+      <input id="insNombre" placeholder="Ej: Harina 0000"/>
+
+      <label>Unidad</label>
+      <select id="insUnidad">
+        <option value="g">gramos (g)</option>
+        <option value="kg">kilogramos (kg)</option>
+        <option value="ml">mililitros (ml)</option>
+        <option value="l">litros (l)</option>
+        <option value="unidad">unidad</option>
+      </select>
+
+      <label>Stock actual</label>
+      <input id="insStock" type="number" step="any" placeholder="0"/>
+
+      <label>Avisar cuando el stock baje de</label>
+      <input id="insMinimo" type="number" step="any" placeholder="0"/>
+
+      <button onclick="crearInsumo()">Agregar insumo</button>
+    </div>
+  </section>
+
+  <!-- ===================== RECETAS ===================== -->
+  <section class="tab-panel hidden" id="tab-recetas">
+    <div class="card">
+      <h2>Recetas</h2>
+      <div id="listaRecetas"></div>
+    </div>
+
+    <div class="card">
+      <h3>➕ Nueva receta</h3>
+      <label>Nombre</label>
+      <input id="recNombre" placeholder="Ej: Pretzel artesanal"/>
+
+      <label>Rinde (cuánto produce esta receta)</label>
+      <input id="recRinde" placeholder="Ej: 12 unidades"/>
+
+      <h4>Insumos que usa</h4>
+      <div id="recIngredientesForm"></div>
+
+      <div class="fila-agregar-insumo">
+        <select id="recInsumoSelect"></select>
+        <input id="recInsumoCantidad" type="number" step="any" placeholder="Cantidad"/>
+        <button type="button" class="btn-mini" onclick="agregarIngredienteAReceta()">+ Agregar</button>
+      </div>
+
+      <button onclick="crearReceta()">Guardar receta</button>
+    </div>
+  </section>
+
+  <!-- ===================== PRODUCCIÓN ===================== -->
+  <section class="tab-panel hidden" id="tab-produccion">
+    <div class="card">
+      <h2>Registrar producción</h2>
+      <p class="ayuda">Al registrar, se descuenta automáticamente el stock de insumos usados.</p>
+
+      <label>Receta</label>
+      <select id="prodReceta" onchange="actualizarPreviewProduccion()"></select>
+
+      <label>Cantidad de tandas</label>
+      <input id="prodTandas" type="number" min="1" value="1" onchange="actualizarPreviewProduccion()" oninput="actualizarPreviewProduccion()"/>
+
+      <div id="prodPreview"></div>
+
+      <button onclick="confirmarProduccion()">Registrar producción</button>
+      <p class="ok-msg hidden" id="prodOk">Producción registrada ✅</p>
+    </div>
+  </section>
+
+  <!-- ===================== BACKUP ===================== -->
+  <section class="tab-panel hidden" id="tab-backup">
+    <div class="card">
+      <h2>💾 Backup manual</h2>
+      <p class="ayuda">
+        Esta app no usa internet ni nube: todo se guarda solo en este celular.
+        Para no perder tus datos si cambiás de celular, descargá un backup acá
+        y luego restauralo en el nuevo dispositivo.
+      </p>
+      <button onclick="exportarBackup()">Descargar backup</button>
+      <input type="file" id="inputBackup" accept="application/json" style="display:none" onchange="importarBackup(event)"/>
+      <button onclick="elegirRestaurarBackup()">Restaurar backup</button>
+      <p class="ok-msg hidden" id="backupOk"></p>
+    </div>
+  </section>
+
+</main>
+
+<script src="datos.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
