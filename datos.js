@@ -15,6 +15,7 @@ const DA = {
   _horarios: [],
   _negocio: null,
   _pedidos: [],
+  _pagos: [],
   _listo: false,
   onPedidosActualizados: null, // admin.js puede engancharse acá para re-renderizar
 
@@ -25,7 +26,8 @@ const DA = {
       this._cargarProductos(),
       this._cargarHorarios(),
       this._cargarNegocio(),
-      this._cargarPedidos() // si no está logueado, Supabase simplemente no devuelve nada (RLS)
+      this._cargarPedidos(), // si no está logueado, Supabase simplemente no devuelve nada (RLS)
+      this._cargarPagos()    // idem: los pagos son solo para el admin
     ]);
     this._listo = true;
   },
@@ -399,5 +401,199 @@ const DA = {
     if (data.da_horarios) await this.saveHorarios(this._migrarHorarios(data.da_horarios));
     if (data.da_negocio) await this.saveNegocio(data.da_negocio);
     return true;
-  }
+  },
+
+  // =========================
+  // PAGOS (Caja)
+  // =========================
+  // Un pedido puede tener varios pagos: una seña hoy, el saldo
+  // el día que retira. Cada pago guarda SU fecha, que es la que
+  // manda para el total del mes.
+
+  async _cargarPagos() {
+    try {
+      const { data, error } = await supabaseClient
+        .from("pagos").select("*").order("fecha", { ascending: false });
+      if (error) throw error;
+      this._pagos = (data || []).map(r => ({
+        id: r.id,
+        pedidoId: r.pedido_id,
+        monto: Number(r.monto),
+        metodo: r.metodo,
+        nota: r.nota || "",
+        fecha: r.fecha,
+        creadoEn: r.creado_en
+      }));
+    } catch (e) {
+      console.error("No se pudieron cargar los pagos:", e);
+    }
+  },
+
+  getPagos() {
+    return this._pagos.slice();
+  },
+
+  // Pagos de un pedido puntual, del más viejo al más nuevo
+  pagosDePedido(pedidoId) {
+    return this._pagos
+      .filter(p => p.pedidoId === pedidoId)
+      .sort((a, b) => a.fecha.localeCompare(b.fecha));
+  },
+
+  // Las tres cifras que importan de un pedido
+  saldoPedido(pedido) {
+    const total  = Number(pedido.total) || 0;
+    const pagado = this.pagosDePedido(pedido.id)
+      .reduce((acc, p) => acc + Number(p.monto), 0);
+    const saldo  = Math.round((total - pagado) * 100) / 100;
+    return {
+      total,
+      pagado,
+      saldo: saldo > 0 ? saldo : 0,
+      aFavor: saldo < 0 ? Math.abs(saldo) : 0,  // le cobraste de más
+      saldado: saldo <= 0 && pagado > 0
+    };
+  },
+
+  async agregarPago({ pedidoId, monto, metodo, nota, fecha }) {
+    const nuevo = {
+      id: "pag" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      pedidoId,
+      monto: Number(monto),
+      metodo: metodo || "efectivo",
+      nota: nota || "",
+      fecha: fecha || this.hoyISO(),
+      creadoEn: new Date().toISOString()
+    };
+
+    this._pagos.unshift(nuevo);
+
+    try {
+      const { error } = await supabaseClient.from("pagos").insert({
+        id: nuevo.id,
+        pedido_id: nuevo.pedidoId,
+        monto: nuevo.monto,
+        metodo: nuevo.metodo,
+        nota: nuevo.nota,
+        fecha: nuevo.fecha,
+        creado_en: nuevo.creadoEn
+      });
+      if (error) throw error;
+    } catch (e) {
+      console.error("No se pudo guardar el pago en el servidor:", e);
+      this._pagos = this._pagos.filter(p => p.id !== nuevo.id); // deshacer
+      return null;
+    }
+
+    return nuevo;
+  },
+
+  async eliminarPago(id) {
+    this._pagos = this._pagos.filter(p => p.id !== id);
+    try {
+      const { error } = await supabaseClient.from("pagos").delete().eq("id", id);
+      if (error) throw error;
+    } catch (e) {
+      console.error("No se pudo eliminar el pago:", e);
+    }
+  },
+
+  hoyISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  },
+
+  // =========================
+  // CAJA: totales por mes
+  // =========================
+  // Devuelve un arreglo de meses, del más reciente al más viejo:
+  // { mes: "2026-08", etiqueta: "agosto 2026", total, efectivo,
+  //   transferencia, cantidad }
+  resumenPorMes() {
+    const mapa = {};
+
+    this._pagos.forEach(p => {
+      const mes = p.fecha.slice(0, 7);
+      if (!mapa[mes]) {
+        mapa[mes] = { mes, total: 0, efectivo: 0, transferencia: 0, cantidad: 0 };
+      }
+      mapa[mes].total += p.monto;
+      mapa[mes].cantidad++;
+      if (p.metodo === "transferencia") mapa[mes].transferencia += p.monto;
+      else mapa[mes].efectivo += p.monto;
+    });
+
+    return Object.values(mapa)
+      .sort((a, b) => b.mes.localeCompare(a.mes))
+      .map(m => {
+        const [anio, num] = m.mes.split("-");
+        const etiqueta = new Date(Number(anio), Number(num) - 1, 1)
+          .toLocaleDateString("es-AR", { month: "long", year: "numeric" });
+        return Object.assign({}, m, { etiqueta });
+      });
+  },
+
+  // Pedidos que todavía deben plata (no cancelados)
+  pedidosConSaldo() {
+    return this._pedidos
+      .filter(p => p.estado !== "cancelado")
+      .map(p => Object.assign({ _saldo: this.saldoPedido(p) }, p))
+      .filter(p => p._saldo.saldo > 0);
+  },
+
+
+  // =========================
+  // FOTOS DE PRODUCTOS (Supabase Storage)
+  // =========================
+  // La foto se achica y se comprime EN EL CELULAR antes de subir.
+  // Una foto de cámara pesa 3-5 MB; si suben ocho así, una clienta
+  // con datos móviles espera una eternidad y gasta su plan. Acá
+  // sale a 900px de lado y ~150-250 KB, que es más que suficiente
+  // para verse nítida en cualquier pantalla.
+
+  async _comprimirFoto(file, maxLado = 900, calidad = 0.82) {
+    const bitmap = await createImageBitmap(file);
+
+    let { width, height } = bitmap;
+    if (width > maxLado || height > maxLado) {
+      const escala = maxLado / Math.max(width, height);
+      width  = Math.round(width  * escala);
+      height = Math.round(height * escala);
+    }
+
+    const lienzo = document.createElement("canvas");
+    lienzo.width = width;
+    lienzo.height = height;
+    lienzo.getContext("2d").drawImage(bitmap, 0, 0, width, height);
+    bitmap.close();
+
+    return new Promise((resolve, reject) => {
+      lienzo.toBlob(
+        b => b ? resolve(b) : reject(new Error("No se pudo procesar la imagen")),
+        "image/jpeg",
+        calidad
+      );
+    });
+  },
+
+  // Sube la foto y devuelve la dirección pública para guardar
+  // en el producto. Devuelve null si algo falla.
+  async subirFoto(file) {
+    if (!file || !file.type.startsWith("image/")) {
+      throw new Error("El archivo elegido no es una imagen.");
+    }
+
+    const blob = await this._comprimirFoto(file);
+    const nombre = `prod-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}.jpg`;
+
+    const { error } = await supabaseClient
+      .storage.from("productos")
+      .upload(nombre, blob, { contentType: "image/jpeg", upsert: false });
+
+    if (error) throw error;
+
+    const { data } = supabaseClient.storage.from("productos").getPublicUrl(nombre);
+    return data.publicUrl;
+  },
+
 };
