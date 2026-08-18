@@ -1,435 +1,667 @@
-/* ═══════════════════════════════════════════════
-   DELICIAS ALEMANAS — CLIENTE CSS NUEVO
-   Estilo: Boutique alemana elegante
-   Crema + Negro suave + Dorado
-═══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   DELICIAS ALEMANAS WOLGADEUTSCHE — HOJA DE ESTILOS CLIENTE
+   ═══════════════════════════════════════════════════════════
+   Diseño pensado para dos públicos a la vez:
+     · Clientas exigentes  → tipografía con carácter, oro al mínimo, mucho aire
+     · Clientas mayores    → cuerpo grande, contraste alto, botones de 56px
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&family=UnifrakturMaguntia&display=swap');
+   Reglas que NO se rompen (accesibilidad):
+     · Todo en rem → respeta el tamaño de letra que la persona configuró
+       en su celular. Nada de px fijos en texto.
+     · El oro (#A8842C) da 3.2:1 sobre el crema: NUNCA se usa en texto
+       chico. Solo filetes, bordes y números grandes.
+     · Ningún estado se distingue solo por color: siempre hay además
+       borde, fondo o un símbolo.
+   ═══════════════════════════════════════════════════════════ */
 
 :root {
-  --fondo: #F6F1E7;
-  --crema: #FFF9F0;
-  --negro: #1C1A17;
-  --gris: #6E665A;
-  --borde: #D6C7AA;
-  --dorado: #C8A24A;
-  --dorado2: #A8840A;
-  --rojo: #A31621; /* acento rojo, junto con negro y dorado: colores de la bandera alemana */
-  --sombra: 0 6px 20px rgba(0,0,0,.08);
-  --radius: 14px;
+  /* --- Papel y tinta --- */
+  --papel:        #F3EDDF;   /* crema de la marca */
+  --papel-alto:   #FBF7EC;   /* superficie elevada (fichas) */
+  --papel-hueco:  #EAE2D0;   /* hundido (deshabilitado) */
+  --tinta:        #1F1A13;   /* casi negro, cálido — 15:1 */
+  --tinta-2:      #5A5044;   /* secundario — 7:1 */
 
-  /* Paleta del hero (más femenina, sigue "a lo alemán") */
-  --vino: #6B1727;
-  --vino-oscuro: #4A0F1C;
-  --marfil: #FBF3E7;
-  --oro-rosa: #C9976B;
-  --rosa-empolvado: #E8C4B8;
-  --carbon: #2B1D18;
+  /* --- Acentos --- */
+  --borgona:      #6B1220;   /* acción principal — 10:1 */
+  --borgona-alto: #8C2231;
+  --oro:          #A8842C;   /* SOLO decoración y texto grande */
+  --oro-claro:    #C8A24A;
+
+  /* --- Banderas --- */
+  --ale-negro:  #16130E;
+  --ale-rojo:   #C8102E;
+  --ale-oro:    #E8B800;
+  --arg-cielo:  #7BA7CE;
+  --arg-sol:    #E9A81C;
+
+  --linea:      rgba(31,26,19,.16);
+  --linea-oro:  rgba(168,132,44,.42);
+
+  --sombra-ficha: 0 1px 2px rgba(31,26,19,.05), 0 8px 24px -12px rgba(31,26,19,.22);
+  --sombra-alta:  0 2px 4px rgba(31,26,19,.07), 0 18px 40px -18px rgba(31,26,19,.30);
+
+  --radio:     14px;
+  --radio-chico: 9px;
+  --ancho:     40rem;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ─────────── Base ─────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;  /* evita que el celular reescale solo */
 }
 
 body {
-  font-family: 'Lato', sans-serif;
-  background: var(--fondo);
-  color: var(--negro);
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: "Fira Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 1.125rem;        /* 18px de base: leíble sin esfuerzo */
+  line-height: 1.55;
+  overflow-x: hidden;         /* nunca scroll horizontal */
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ===================== HERO ===================== */
+/* Textura de papel: dos gradientes muy tenues. Da calidez sin peso. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(60rem 40rem at 12% -8%, rgba(200,162,74,.10), transparent 60%),
+    radial-gradient(50rem 36rem at 92% 4%, rgba(107,18,32,.05), transparent 62%);
+}
+
+img { max-width: 100%; display: block; }
+
+.hidden { display: none !important; }
+
+/* Foco visible siempre: quien navega con teclado no queda perdido */
+:focus-visible {
+  outline: 3px solid var(--borgona);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   ENCABEZADO
+   ═══════════════════════════════════════════ */
+
 .hero {
   position: relative;
-  overflow: hidden;
+  z-index: 1;
   text-align: center;
-  padding: 2.1rem 1.25rem 1.9rem;
+  padding: 2.5rem 1.5rem 2rem;
   background:
-    radial-gradient(circle at 20% 15%, rgba(200,162,74,0.18), transparent 45%),
-    radial-gradient(circle at 85% 10%, rgba(200,162,74,0.14), transparent 40%),
-    linear-gradient(160deg, var(--vino) 0%, var(--vino-oscuro) 100%);
-  color: var(--marfil);
+    linear-gradient(180deg, var(--papel-alto) 0%, var(--papel) 100%);
+  border-bottom: 1px solid var(--linea-oro);
+  overflow: hidden;
 }
 
-/* Banderas laterales angostas — decoración de fondo, no pasan por debajo del texto.
-   Izquierda: Argentina (celeste/blanco con sol/celeste). Derecha: Alemania (negro/rojo/dorado). */
+/* --- Cintas de bandera, verticales en los bordes --- */
+/* Van finitas y al borde: presentes, sin gritar. */
 .bandera-lateral {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 34px;
-  z-index: 0;
-  box-shadow: inset 0 0 14px rgba(0,0,0,.4);
+  width: 7px;
 }
-
-.bandera-lateral::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(255,255,255,.14) 0, rgba(255,255,255,.14) 1px,
-    transparent 1px, transparent 33.33%
-  );
-  mix-blend-mode: overlay;
-}
-
-.bandera-arg-lateral {
-  left: 0;
-  background: linear-gradient(
-    90deg,
-    #74ACDF 0%, #74ACDF 33.33%,
-    #F6F1E7 33.33%, #F6F1E7 66.66%,
-    #74ACDF 66.66%, #74ACDF 100%
-  );
-  box-shadow: inset -6px 0 14px rgba(0,0,0,.35), 4px 0 10px rgba(0,0,0,.3);
-}
-
 .bandera-ale-lateral {
+  left: 0;
+  background: linear-gradient(180deg,
+    var(--ale-negro) 0 33.33%,
+    var(--ale-rojo)  33.33% 66.66%,
+    var(--ale-oro)   66.66% 100%);
+  box-shadow: 1px 0 0 rgba(31,26,19,.14);
+}
+.bandera-arg-lateral {
   right: 0;
-  background: linear-gradient(
-    90deg,
-    var(--negro) 0%, var(--negro) 33.33%,
-    var(--rojo) 33.33%, var(--rojo) 66.66%,
-    var(--dorado) 66.66%, var(--dorado) 100%
-  );
-  box-shadow: inset 6px 0 14px rgba(0,0,0,.35), -4px 0 10px rgba(0,0,0,.3);
+  background: linear-gradient(180deg,
+    var(--arg-cielo) 0 33.33%,
+    #FFFFFF          33.33% 66.66%,
+    var(--arg-cielo) 66.66% 100%);
+  box-shadow: -1px 0 0 rgba(31,26,19,.14);
 }
 
+/* --- Sol argentino: chico, arriba, como un timbre de lacre --- */
 .sol-arg {
   position: absolute;
-  top: 50%;
-  left: 17px;
-  width: 22px;
-  height: 22px;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  filter: drop-shadow(0 1px 3px rgba(0,0,0,.4));
+  top: .9rem;
+  right: 1.6rem;
+  width: 2.1rem;
+  height: 2.1rem;
+  opacity: .92;
+  filter: drop-shadow(0 1px 2px rgba(31,26,19,.22));
 }
 
+/* --- Filetes a los costados del rombo --- */
 .flourish-row {
-  position: relative;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 8px;
-  color: var(--oro-rosa);
-  font-size: 13px;
-  letter-spacing: 2px;
+  gap: .8rem;
+  color: var(--oro);
+  font-size: .8rem;
+  letter-spacing: .1em;
+  margin-bottom: 1.4rem;
 }
-
 .flourish-row svg {
-  width: 40px;
-  height: 14px;
-  opacity: .85;
+  width: 3.6rem;
+  height: .9rem;
+  opacity: .75;
 }
 
+/* --- Logo con marco de moneda --- */
 .logo-wrap {
-  position: relative;
-  z-index: 3;
-  width: 128px;
-  height: 128px;
-  margin: 6px auto 14px;
+  width: 6.5rem;
+  height: 6.5rem;
+  margin: 0 auto 1.1rem;
   border-radius: 50%;
-  padding: 6px;
-  background: linear-gradient(135deg, var(--dorado) 0%, var(--oro-rosa) 55%, var(--dorado) 100%);
-  box-shadow: 0 8px 26px rgba(0,0,0,.5), 0 0 0 6px rgba(251,243,231,.08);
+  padding: 5px;
+  background:
+    linear-gradient(145deg, var(--oro-claro), var(--oro) 45%, #8A6C22 70%, var(--oro-claro));
+  box-shadow: var(--sombra-alta);
 }
-
 .hero-logo {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 3px solid var(--marfil);
   object-fit: cover;
-  display: block;
+  border: 2px solid var(--papel-alto);
 }
 
+/* --- El nombre: gótica alemana, una sola vez, en grande --- */
 .hero-title {
-  position: relative;
-  z-index: 2;
-  font-family: 'UnifrakturMaguntia', cursive;
-  font-weight: 400;
-  font-size: 2.7rem;
-  line-height: 1.15;
-  letter-spacing: .5px;
-  color: var(--marfil);
-  text-shadow: 0 2px 10px rgba(0,0,0,.4);
-  margin-bottom: 4px;
+  font-family: "Grenze Gotisch", "Fira Sans", serif;
+  font-weight: 600;
+  font-size: clamp(2.6rem, 12vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: .012em;
+  margin: 0 0 .5rem;
+  color: var(--tinta);
+  text-wrap: balance;
 }
 
 .hero-sub {
-  position: relative;
-  z-index: 2;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: "Spectral", Georgia, serif;
   font-style: italic;
-  font-weight: 600;
-  font-size: 1.15rem;
-  letter-spacing: .3px;
-  color: var(--rosa-empolvado);
+  font-size: 1.1rem;
+  color: var(--tinta-2);
+  margin: 0 0 1.5rem;
+  letter-spacing: .015em;
 }
 
-/* ===================== CINTA Y MOTIVO DECORATIVO ===================== */
-.cinta-alemana {
-  height: 6px;
-  background: linear-gradient(
-    to right,
-    var(--negro) 0%, var(--negro) 33.33%,
-    var(--rojo) 33.33%, var(--rojo) 66.66%,
-    var(--dorado) 66.66%, var(--dorado) 100%
-  );
-}
-
+/* --- Espigas de trigo: el motivo propio de los alemanes del Volga --- */
 .motivo-decorativo {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 14px 10px 0;
-  font-size: .95rem;
-  letter-spacing: 6px;
-  color: var(--oro-rosa);
-  opacity: .9;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-/* ===================== MAIN ===================== */
-.main {
-  max-width: 720px;
-  margin: auto;
-  padding: 1.5rem;
-}
-
-/* ===================== PASOS ===================== */
-.paso-card {
-  background: var(--crema);
-  border: 1px solid var(--borde);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  box-shadow: var(--sombra);
-}
-
-.paso-num {
-  width: 34px;
-  height: 34px;
-  background: var(--negro);
-  color: var(--dorado);
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  color: var(--oro);
+  margin-top: .25rem;
+}
+.motivo-decorativo svg { height: 2.3rem; width: auto; }
+.motivo-decorativo .filete {
+  flex: 1;
+  max-width: 5.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--linea-oro), transparent);
+}
+
+/* --- Cinta tricolor bajo el encabezado --- */
+.cinta-alemana {
+  position: relative;
+  z-index: 1;
+  height: 5px;
+  background: linear-gradient(90deg,
+    var(--ale-negro) 0 33.33%,
+    var(--ale-rojo)  33.33% 66.66%,
+    var(--ale-oro)   66.66% 100%);
+}
+
+/* ═══════════════════════════════════════════
+   CUERPO
+   ═══════════════════════════════════════════ */
+
+.main {
+  position: relative;
+  z-index: 1;
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 1.75rem 1.1rem 4rem;
+}
+
+/* --- Ficha de paso --- */
+.paso-card {
+  position: relative;
+  background: var(--papel-alto);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-ficha);
+  padding: 2.6rem 1.3rem 1.6rem;
+}
+/* Filete dorado interior: el detalle de etiqueta de confitería */
+.paso-card::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid var(--linea-oro);
+  border-radius: calc(var(--radio) - 5px);
+  pointer-events: none;
+}
+
+/* Número de paso: medallón centrado sobre el borde superior */
+.paso-num {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3.1rem;
+  height: 3.1rem;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
-  font-weight: bold;
-  margin-bottom: 10px;
+  background: var(--papel-alto);
+  border: 1.5px solid var(--oro);
+  color: var(--borgona);
+  font-family: "Spectral", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  box-shadow: var(--sombra-ficha);
 }
 
 .paso-titulo {
-  font-family: 'Playfair Display', serif;
-  margin-bottom: 5px;
+  font-family: "Spectral", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.65rem;
+  line-height: 1.2;
+  text-align: center;
+  margin: .3rem 0 .4rem;
+  color: var(--tinta);
+  text-wrap: balance;
 }
 
 .paso-desc {
-  font-size: .9rem;
-  color: var(--gris);
-  margin-bottom: 15px;
-}
-
-/* ===================== CALENDARIO ===================== */
-.cal-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-}
-
-.cal-dia {
-  padding: 10px;
   text-align: center;
-  border-radius: 10px;
-  border: 1px solid var(--borde);
-  cursor: pointer;
-  font-size: .9rem;
+  color: var(--tinta-2);
+  font-size: 1rem;
+  margin: 0 0 1.5rem;
+  text-wrap: pretty;
 }
 
-.cal-dia.disponible {
-  background: var(--negro);
-  color: var(--dorado);
-}
+/* ═══════════════════════════════════════════
+   PRODUCTOS
+   ═══════════════════════════════════════════ */
 
-.cal-dia.sel {
-  background: var(--dorado);
-  color: #000;
-}
-
-/* ===================== HORARIOS ===================== */
-.horario-btn {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 8px;
-  border-radius: 10px;
-  border: 1px solid var(--borde);
-  background: var(--crema);
-  cursor: pointer;
-  text-align: left;
-}
-
-.horario-btn.sel {
-  background: var(--negro);
-  color: var(--dorado);
-}
-
-/* ===================== PRODUCTOS ===================== */
+/* En fila, no en grilla de cuadraditos: se lee mucho mejor
+   en celular y la foto se ve grande. */
 .prod-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .prod-card {
-  background: #fff;
-  border: 1px solid var(--borde);
-  border-radius: 14px;
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1rem;
+  align-items: center;
+  background: var(--papel);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-chico);
+  padding: .9rem;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.prod-card:hover { border-color: var(--linea-oro); box-shadow: var(--sombra-ficha); }
+
+/* Marco de la foto. Si no hay foto, queda el sello de trigo
+   que está dibujado como fondo — nunca un cuadro roto. */
+.prod-foto {
+  position: relative;
+  width: 6.5rem;
+  height: 6.5rem;
+  border-radius: var(--radio-chico);
   overflow: hidden;
-  box-shadow: var(--sombra);
-  cursor: pointer;
-  transition: .2s;
+  border: 1px solid var(--linea-oro);
+  background-color: var(--papel-hueco);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><g fill='none' stroke='%23A8842C' stroke-width='1.6' stroke-linecap='round' opacity='.55'><path d='M40 62V30'/><path d='M40 32c-6-2-9-7-9-12 5 0 9 3 9 8z'/><path d='M40 32c6-2 9-7 9-12-5 0-9 3-9 8z'/><path d='M40 42c-6-2-9-7-9-12 5 0 9 3 9 8z'/><path d='M40 42c6-2 9-7 9-12-5 0-9 3-9 8z'/><path d='M40 52c-6-2-9-7-9-12 5 0 9 3 9 8z'/><path d='M40 52c6-2 9-7 9-12-5 0-9 3-9 8z'/><circle cx='40' cy='40' r='31' opacity='.45'/></g></svg>");
+  background-size: 78% 78%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-
-.prod-card:hover {
-  transform: translateY(-2px);
-}
-
 .prod-img {
   width: 100%;
-  height: 110px;
+  height: 100%;
   object-fit: cover;
 }
 
-.prod-info {
-  padding: 10px;
-}
+.prod-info { min-width: 0; }
 
 .prod-nombre {
-  font-family: 'UnifrakturMaguntia', cursive;
-  font-weight: 400;
-  font-size: 1.25rem;
-  line-height: 1.15;
-  color: var(--vino-oscuro);
+  font-family: "Spectral", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.22rem;
+  line-height: 1.25;
+  margin-bottom: .15rem;
+  text-wrap: pretty;
 }
 
 .prod-precio {
-  color: var(--dorado2);
-  font-weight: bold;
-  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 1.18rem;
+  color: var(--borgona);
+  margin-bottom: .7rem;
 }
 
+/* --- Contador de cantidad: los botones más tocados del sitio --- */
 .cantidad-box {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
+  gap: .55rem;
 }
-
+.cantidad-box > span {
+  min-width: 3rem;
+  text-align: center;
+  font-size: 1.35rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
 .cantidad-btn {
-  width: 26px;
-  height: 26px;
-  border: none;
-  background: var(--negro);
-  color: var(--dorado);
-  border-radius: 6px;
+  flex: 0 0 auto;
+  width: 3.1rem;      /* ~50px: no se achica nunca */
+  height: 3.1rem;
+  min-width: 50px;
+  min-height: 50px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--borgona);
+  background: var(--papel-alto);
+  color: var(--borgona);
+  border-radius: 50%;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1;
   cursor: pointer;
+  font-family: inherit;
+  transition: background .15s ease, color .15s ease;
 }
+.cantidad-btn:hover { background: var(--borgona); color: var(--papel-alto); }
+.cantidad-btn:active { transform: scale(.94); }
 
-/* ===================== FORM ===================== */
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--borde);
-  margin-top: 5px;
-}
+/* ═══════════════════════════════════════════
+   RESUMEN DEL CARRITO
+   ═══════════════════════════════════════════ */
 
-/* ===================== BOTÓN ===================== */
-.btn-confirmar {
-  width: 100%;
-  padding: 14px;
-  background: var(--negro);
-  color: var(--dorado);
-  border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.hidden {
-  display: none;
-}
-
-/* ===================== RESUMEN CARRITO ===================== */
-.resumen-carrito, .resumen-final {
-  margin-top: 16px;
-  border-top: 1px dashed var(--borde);
-  padding-top: 10px;
+.resumen-carrito:not(:empty),
+.resumen-final {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.2rem;
+  background: var(--papel);
+  border: 1px solid var(--linea-oro);
+  border-radius: var(--radio-chico);
 }
 
 .resumen-linea {
   display: flex;
   justify-content: space-between;
-  font-size: .9rem;
-  padding: 4px 0;
+  gap: 1rem;
+  padding: .42rem 0;
+  font-size: 1.02rem;
+  color: var(--tinta-2);
+}
+.resumen-linea > span:last-child {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--tinta);
 }
 
 .resumen-total {
-  font-weight: bold;
-  font-size: 1.05rem;
-  border-top: 1px solid var(--borde);
-  margin-top: 6px;
-  padding-top: 8px;
+  margin-top: .5rem;
+  padding-top: .8rem;
+  border-top: 1.5px solid var(--linea-oro);
+  font-family: "Spectral", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--tinta);
+}
+.resumen-total > span:last-child { color: var(--borgona); }
+
+.resumen-final hr {
+  border: 0;
+  border-top: 1px dashed var(--linea);
+  margin: .9rem 0;
 }
 
-/* ===================== ERROR ===================== */
+/* ═══════════════════════════════════════════
+   FORMULARIO
+   ═══════════════════════════════════════════ */
+
+label {
+  display: block;
+  font-size: .96rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--tinta-2);
+  margin: 1.15rem 0 .4rem;
+}
+
+input, select {
+  width: 100%;
+  padding: .95rem 1rem;
+  min-height: 56px;              /* cómodo para cualquier dedo */
+  font-family: inherit;
+  font-size: 1.08rem;            /* 16px+ evita que iOS haga zoom solo */
+  color: var(--tinta);
+  background: var(--papel);
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio-chico);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--borgona);
+  box-shadow: 0 0 0 3px rgba(107,18,32,.14);
+}
+input::placeholder { color: #9A8F7E; }
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%235A5044' stroke-width='1.8' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1.1rem center;
+  background-size: .8rem;
+  padding-right: 2.8rem;
+}
+
 .error-msg {
-  color: var(--rojo);
-  font-size: .85rem;
-  margin-top: 8px;
+  margin: 1rem 0 0;
+  padding: .85rem 1rem;
+  background: rgba(107,18,32,.07);
+  border-left: 4px solid var(--borgona);
+  border-radius: 0 var(--radio-chico) var(--radio-chico) 0;
+  color: var(--borgona);
+  font-size: 1rem;
+  font-weight: 500;
 }
 
-/* ===================== BOTONES PASO ===================== */
-.botones-paso {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
+/* ═══════════════════════════════════════════
+   BOTONES
+   ═══════════════════════════════════════════ */
+
+.btn-confirmar, .btn-volver {
+  width: 100%;
+  min-height: 58px;
+  padding: 1rem 1.4rem;
+  font-family: "Fira Sans", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  border-radius: var(--radio-chico);
+  cursor: pointer;
+  transition: background .18s ease, box-shadow .18s ease, transform .1s ease;
 }
 
-.botones-paso .btn-confirmar {
-  flex: 1;
+.btn-confirmar {
+  margin-top: 1.5rem;
+  border: 1px solid var(--borgona);
+  background: var(--borgona);
+  color: #FBF7EC;
+  box-shadow: var(--sombra-ficha);
+}
+.btn-confirmar:hover:not(:disabled) { background: var(--borgona-alto); }
+.btn-confirmar:active:not(:disabled) { transform: translateY(1px); }
+.btn-confirmar:disabled {
+  background: var(--papel-hueco);
+  border-color: var(--linea);
+  color: #948976;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .btn-volver {
-  flex: 0 0 auto;
-  padding: 14px 18px;
+  border: 1.5px solid var(--linea);
   background: transparent;
-  color: var(--gris);
-  border: 1px solid var(--borde);
-  border-radius: 12px;
+  color: var(--tinta-2);
+}
+.btn-volver:hover { border-color: var(--tinta-2); color: var(--tinta); }
+
+/* En celular apilados (el principal arriba), en pantalla ancha en fila */
+.botones-paso {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: .7rem;
+  margin-top: 1.5rem;
+}
+.botones-paso .btn-confirmar { margin-top: 0; }
+
+/* ═══════════════════════════════════════════
+   CALENDARIO Y HORARIOS
+   ═══════════════════════════════════════════ */
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.2rem, 1fr));
+  gap: .6rem;
+}
+
+.cal-dia {
+  position: relative;
+  min-height: 4.6rem;
+  padding: .7rem .35rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  border-radius: var(--radio-chico);
+  border: 1.5px solid var(--linea);
+  background: var(--papel);
   font-size: 1rem;
-  cursor: pointer;
+  line-height: 1.28;
+  transition: border-color .15s ease, background .15s ease;
+}
+.cal-dia.disponible { cursor: pointer; }
+.cal-dia.disponible:hover {
+  border-color: var(--oro);
+  background: var(--papel-alto);
 }
 
-/* ===================== DÍAS NO DISPONIBLES ===================== */
+/* No disponible: apagado + tachado. No depende solo del color. */
 .cal-dia.no-disponible {
-  opacity: .4;
+  background: var(--papel-hueco);
+  color: #978C79;
+  border-style: dashed;
   cursor: not-allowed;
-  background: #eee;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
 }
 
-/* ===================== BOTÓN DESHABILITADO ===================== */
-.btn-confirmar:disabled {
-  opacity: .4;
-  cursor: not-allowed;
+/* Elegido: fondo, borde Y tilde. Tres señales, no una. */
+.cal-dia.sel {
+  background: var(--borgona);
+  border-color: var(--borgona);
+  color: #FBF7EC;
+  font-weight: 600;
+  box-shadow: var(--sombra-ficha);
+}
+.cal-dia.sel::after {
+  content: "✓";
+  position: absolute;
+  top: .25rem;
+  right: .45rem;
+  font-size: .9rem;
+  color: var(--oro-claro);
+}
+
+/* Horarios: pastillas anchas, fáciles de acertar */
+#horarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.2rem, 1fr));
+  gap: .6rem;
+}
+.horario-btn {
+  position: relative;
+  min-height: 56px;
+  display: grid;
+  place-items: center;
+  padding: .8rem .5rem;
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio-chico);
+  background: var(--papel);
+  font-size: 1.08rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+.horario-btn:hover { border-color: var(--oro); background: var(--papel-alto); }
+.horario-btn.sel {
+  background: var(--borgona);
+  border-color: var(--borgona);
+  color: #FBF7EC;
+  font-weight: 600;
+}
+.horario-btn.sel::after {
+  content: "✓";
+  position: absolute;
+  top: .2rem;
+  right: .4rem;
+  font-size: .8rem;
+  color: var(--oro-claro);
+}
+
+/* ═══════════════════════════════════════════
+   PANTALLAS MÁS ANCHAS
+   ═══════════════════════════════════════════ */
+
+@media (min-width: 34rem) {
+  .paso-card { padding: 3rem 2.2rem 2rem; }
+  .main { padding: 2.5rem 1.5rem 5rem; }
+
+  .prod-card { grid-template-columns: 8rem 1fr; gap: 1.3rem; padding: 1.1rem; }
+  .prod-foto { width: 8rem; height: 8rem; }
+
+  /* Con espacio, los botones vuelven a fila: Volver a la izquierda */
+  .botones-paso { flex-direction: row; }
+  .botones-paso .btn-volver { flex: 0 0 38%; }
+  .botones-paso .btn-confirmar { flex: 1; }
+}
+
+@media (min-width: 48rem) {
+  .hero { padding: 3.5rem 2rem 2.75rem; }
+  .logo-wrap { width: 7.5rem; height: 7.5rem; }
+  .hero-sub { font-size: 1.2rem; }
 }
