@@ -55,9 +55,25 @@
 </header>
 <div class="cinta-alemana"></div>
 
+<nav class="tabs" id="tabs" role="tablist" aria-label="Secciones del panel">
+  <button class="tab activo" role="tab" data-tab="pedidos"   onclick="irTab('pedidos')"   type="button">📋 Pedidos</button>
+  <button class="tab"        role="tab" data-tab="caja"      onclick="irTab('caja')"      type="button">💰 Caja</button>
+  <button class="tab"        role="tab" data-tab="agenda"    onclick="irTab('agenda')"    type="button">🕐 Agenda</button>
+  <button class="tab"        role="tab" data-tab="productos" onclick="irTab('productos')" type="button">🧁 Productos</button>
+  <button class="tab"        role="tab" data-tab="ajustes"   onclick="irTab('ajustes')"   type="button">⚙️ Ajustes</button>
+</nav>
+
 <main class="admin-main">
 
-  <!-- ===================== PEDIDO MANUAL (TELEFÓNICO) ===================== -->
+  <div class="tab-panel" id="tab-pedidos">
+  <section class="card">
+    <h2>📋 Pedidos</h2>
+    <p class="ayuda">Se actualiza solo cada 20 segundos si tenés esta pantalla abierta. También podés forzarlo con el botón.</p>
+    <button class="btn-mini" id="btnActualizarPedidos" onclick="actualizarPedidosManual()" type="button">🔄 Actualizar pedidos</button>
+    <div class="filtros" id="filtrosPedidos"></div>
+    <div id="listaPedidos"></div>
+  </section>
+
   <section class="card card-destacada">
     <h2>📞 Cargar pedido manual</h2>
     <p class="ayuda">Para cuando un cliente te pide por teléfono — muy útil con clientes que no manejan bien la web, como algunos de mayor edad. Se agrega directo a "Pedidos", como si lo hubiese cargado el cliente.</p>
@@ -94,17 +110,28 @@
     <button onclick="agregarPedidoManual()">➕ Agregar pedido</button>
     <p class="ok-msg hidden" id="manualOk">Pedido agregado ✅</p>
   </section>
+  </div>
 
-  <!-- ===================== PEDIDOS ===================== -->
-  <section class="card">
-    <h2>📋 Pedidos</h2>
-    <p class="ayuda">Se actualiza solo cada 20 segundos si tenés esta pantalla abierta. También podés forzarlo con el botón.</p>
-    <button class="btn-mini" id="btnActualizarPedidos" onclick="actualizarPedidosManual()" type="button">🔄 Actualizar pedidos</button>
-    <div class="filtros" id="filtrosPedidos"></div>
-    <div id="listaPedidos"></div>
+  <div class="tab-panel hidden" id="tab-caja">
+  <section class="card card-destacada">
+    <h2>💰 Cobros del mes</h2>
+    <p class="ayuda">Cada pago se cuenta en el mes en que entró la plata, no en el del pedido. Si te dan una seña en agosto por una torta de septiembre, ese dinero suma en agosto.</p>
+    <div id="resumenMeses"></div>
   </section>
 
-  <!-- ===================== DÍAS Y HORARIOS ===================== -->
+  <section class="card">
+    <h2>⏳ Falta cobrar</h2>
+    <p class="ayuda">Pedidos que todavía tienen saldo pendiente. Los cancelados no aparecen.</p>
+    <div id="listaDeudores"></div>
+  </section>
+
+  <section class="card">
+    <h2>🧾 Últimos pagos</h2>
+    <div id="listaPagos"></div>
+  </section>
+  </div>
+
+  <div class="tab-panel hidden" id="tab-agenda">
   <section class="card">
     <h2>🕐 Días y horarios</h2>
     <p class="ayuda">Activá los días que puede haber pedidos y cargá las franjas horarias. Los demás días aparecen "sin cupo" para el cliente.</p>
@@ -114,8 +141,9 @@
     <button onclick="guardarHorarios()">Guardar horarios</button>
     <p class="ok-msg hidden" id="horariosOk">Horarios guardados ✅</p>
   </section>
+  </div>
 
-  <!-- ===================== PRODUCTOS ===================== -->
+  <div class="tab-panel hidden" id="tab-productos">
   <section class="card">
     <h2>🧁 Productos</h2>
 
@@ -131,8 +159,9 @@
 
     <button onclick="agregarProducto()">Agregar</button>
   </section>
+  </div>
 
-  <!-- ===================== DATOS DEL NEGOCIO ===================== -->
+  <div class="tab-panel hidden" id="tab-ajustes">
   <section class="card">
     <h2>📱 Datos de contacto</h2>
     <p class="ayuda">Número de WhatsApp al que llegan los pedidos (con código de país, sin +. Ej: 5492234252233)</p>
@@ -143,7 +172,6 @@
     <p class="ok-msg hidden" id="negocioOk">Guardado ✅</p>
   </section>
 
-  <!-- ===================== BACKUP ===================== -->
   <section class="card">
     <h2>💾 Backup</h2>
     <p class="ayuda">Tus productos, horarios y pedidos ya viven en el servidor (Supabase), no dependen de este navegador. Esto es una copia extra de productos/horarios/datos de contacto por las dudas — los pedidos no se incluyen porque ya tienen su historial en el servidor.</p>
@@ -153,7 +181,6 @@
     <p class="ok-msg hidden" id="backupOk"></p>
   </section>
 
-  <!-- ===================== SEGURIDAD ===================== -->
   <section class="card">
     <h2>🔒 Contraseña</h2>
     <p class="ayuda">Se cambia tu contraseña real de acceso (validada en el servidor, no en este navegador).</p>
@@ -161,6 +188,7 @@
     <button onclick="cambiarPass()">Cambiar contraseña</button>
     <p class="ok-msg hidden" id="passOk">Contraseña actualizada ✅</p>
   </section>
+  </div>
 
 </main>
 
