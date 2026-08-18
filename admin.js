@@ -128,7 +128,7 @@ function renderProductos() {
 
         <div class="prod-acciones">
           <label class="btn-foto">
-            📷 ${p.imagen ? "Cambiar foto" : "Subir foto"}
+            ${p.imagen ? "Cambiar foto" : "Subir foto"}
             <input type="file" accept="image/*" onchange="subirFotoProducto(${i}, this)" hidden/>
           </label>
           ${p.imagen ? `<button class="btn-mini" onclick="quitarFotoProducto(${i})" type="button">Quitar foto</button>` : ""}
@@ -156,7 +156,7 @@ async function subirFotoProducto(i, input) {
 
   const etiqueta = input.parentElement;
   const textoOriginal = etiqueta.firstChild.nodeValue;
-  etiqueta.firstChild.nodeValue = "⏳ Subiendo… ";
+  etiqueta.firstChild.nodeValue = "Subiendo… ";
   etiqueta.classList.add("btn-foto-cargando");
 
   try {
@@ -186,13 +186,13 @@ async function subirFotoNueva(input) {
 
   const etiqueta = input.parentElement;
   const textoOriginal = etiqueta.firstChild.nodeValue;
-  etiqueta.firstChild.nodeValue = "⏳ Subiendo… ";
+  etiqueta.firstChild.nodeValue = "Subiendo… ";
 
   try {
     const url = await DA.subirFoto(file);
     document.getElementById("imagen").value = url;
     document.getElementById("previewNueva").innerHTML = `<img src="${url}" class="prod-foto-mini" alt=""/>`;
-    etiqueta.firstChild.nodeValue = "📷 Cambiar foto ";
+    etiqueta.firstChild.nodeValue = "Cambiar foto ";
   } catch (e) {
     console.error(e);
     etiqueta.firstChild.nodeValue = textoOriginal;
@@ -249,7 +249,7 @@ function agregarProducto() {
   const prev = document.getElementById("previewNueva");
   if (prev) prev.innerHTML = `<div class="prod-foto-mini prod-foto-vacia">sin foto</div>`;
   const etiqueta = document.querySelector(".foto-nueva-box .btn-foto");
-  if (etiqueta) etiqueta.firstChild.nodeValue = "📷 Subir foto ";
+  if (etiqueta) etiqueta.firstChild.nodeValue = "Subir foto ";
 }
 
 // ===================== HORARIOS =====================
@@ -298,7 +298,7 @@ function renderFranjas(di) {
       <input type="time" value="${f.inicio || ""}" onchange="editarFranja(${di}, ${fi}, 'inicio', this.value)"/>
       <span>a</span>
       <input type="time" value="${f.fin || ""}" onchange="editarFranja(${di}, ${fi}, 'fin', this.value)"/>
-      <button class="btn-x" onclick="quitarFranja(${di}, ${fi})" type="button">❌</button>
+      <button class="btn-x" onclick="quitarFranja(${di}, ${fi})" type="button" aria-label="Quitar franja horaria">×</button>
     `;
     cont.appendChild(row);
   });
@@ -388,7 +388,7 @@ function renderPedidoCard(p) {
     <div class="pagos-lista">
       ${pagos.map(pg => `
         <div class="pago-row">
-          <span>${fechaCorta(pg.fecha)} · ${pg.metodo === "transferencia" ? "🏦 Transferencia" : "💵 Efectivo"}${pg.nota ? " · " + pg.nota : ""}</span>
+          <span>${fechaCorta(pg.fecha)} · ${pg.metodo === "transferencia" ? "Transferencia" : "Efectivo"}${pg.nota ? " · " + pg.nota : ""}</span>
           <span class="pago-monto">$${money(pg.monto)}</span>
           <button class="btn-x" onclick="borrarPago('${pg.id}')" type="button" aria-label="Eliminar este pago">×</button>
         </div>
@@ -399,8 +399,8 @@ function renderPedidoCard(p) {
     <div class="cobro-form">
       <input type="number" inputmode="decimal" id="monto-${p.id}" placeholder="Monto" value="${s.saldo}"/>
       <select id="metodo-${p.id}">
-        <option value="efectivo">💵 Efectivo</option>
-        <option value="transferencia">🏦 Transferencia</option>
+        <option value="efectivo">Efectivo</option>
+        <option value="transferencia">Transferencia</option>
       </select>
       <input type="text" id="nota-${p.id}" placeholder="Seña, saldo…"/>
       <button class="btn-mini btn-cobrar" onclick="registrarCobro('${p.id}')" type="button">Registrar cobro</button>
@@ -416,7 +416,7 @@ function renderPedidoCard(p) {
         </span>
       </div>
       <div class="pedido-info">${items}</div>
-      <div class="pedido-info">📅 ${fechaFmt} · 🕐 ${p.hora}hs · ${p.cliente.tipoEntrega === "entrega" ? "🚚 " + (p.cliente.direccion || "") : "🏠 Retiro en local"}</div>
+      <div class="pedido-info">${fechaFmt} · ${p.hora} hs · ${p.cliente.tipoEntrega === "entrega" ? "Envío a " + (p.cliente.direccion || "") : "Retiro en local"}</div>
 
       <div class="pedido-cifras">
         <div><span>Total</span><strong>$${money(s.total)}</strong></div>
@@ -428,10 +428,10 @@ function renderPedidoCard(p) {
       ${formCobro}
 
       <div class="pedido-botones">
-        <a class="btn-mini" href="https://wa.me/${telCliente}?text=${msg}" target="_blank">💬 WhatsApp</a>
-        ${p.estado !== "entregado" ? `<button class="btn-mini" onclick="cambiarEstadoPedido('${p.id}','entregado')" type="button">✅ Entregado</button>` : ""}
-        ${p.estado !== "cancelado" ? `<button class="btn-mini" onclick="cambiarEstadoPedido('${p.id}','cancelado')" type="button">🚫 Cancelar</button>` : ""}
-        <button class="btn-mini btn-mini-danger" onclick="eliminarPedido('${p.id}')" type="button">🗑️</button>
+        <a class="btn-mini" href="https://wa.me/${telCliente}?text=${msg}" target="_blank">WhatsApp</a>
+        ${p.estado !== "entregado" ? `<button class="btn-mini" onclick="cambiarEstadoPedido('${p.id}','entregado')" type="button">Entregado</button>` : ""}
+        ${p.estado !== "cancelado" ? `<button class="btn-mini" onclick="cambiarEstadoPedido('${p.id}','cancelado')" type="button">Cancelar</button>` : ""}
+        <button class="btn-mini btn-mini-danger" onclick="eliminarPedido('${p.id}')" type="button">Eliminar</button>
       </div>
     </div>
   `;
@@ -511,8 +511,8 @@ function renderResumenMeses() {
         <strong class="mes-total">$${money(m.total)}</strong>
       </div>
       <div class="mes-detalle">
-        <span>💵 Efectivo $${money(m.efectivo)}</span>
-        <span>🏦 Transferencia $${money(m.transferencia)}</span>
+        <span>Efectivo $${money(m.efectivo)}</span>
+        <span>Transferencia $${money(m.transferencia)}</span>
         <span>${m.cantidad} ${m.cantidad === 1 ? "cobro" : "cobros"}</span>
       </div>
     </div>
@@ -565,7 +565,7 @@ function renderUltimosPagos() {
       <div class="pago-row pago-row-suelto">
         <span>
           <strong>${ped ? ped.cliente.nombre : "Pedido eliminado"}</strong>
-          <div class="ayuda-mini">${fechaCorta(pg.fecha)} · ${pg.metodo === "transferencia" ? "🏦 Transferencia" : "💵 Efectivo"}${pg.nota ? " · " + pg.nota : ""}</div>
+          <div class="ayuda-mini">${fechaCorta(pg.fecha)} · ${pg.metodo === "transferencia" ? "Transferencia" : "Efectivo"}${pg.nota ? " · " + pg.nota : ""}</div>
         </span>
         <span class="pago-monto">$${money(pg.monto)}</span>
       </div>
@@ -613,7 +613,7 @@ function importarBackup(ev) {
       ok.textContent = "Restaurando (puede tardar unos segundos)...";
       ok.classList.remove("hidden");
       await DA.importBackup(reader.result);
-      ok.textContent = "Backup restaurado ✅ Recargando...";
+      ok.textContent = "Backup restaurado. Recargando…";
       setTimeout(() => location.reload(), 1200);
     } catch (e) {
       alert("No se pudo restaurar el backup: " + e.message);
@@ -643,9 +643,9 @@ async function cambiarPass() {
 // ===================== ACTUALIZAR PEDIDOS A MANO =====================
 async function actualizarPedidosManual() {
   const btn = document.getElementById("btnActualizarPedidos");
-  if (btn) { btn.disabled = true; btn.textContent = "🔄 Actualizando..."; }
+  if (btn) { btn.disabled = true; btn.textContent = "Actualizando…"; }
   await DA.refrescarPedidos();
-  if (btn) { btn.disabled = false; btn.textContent = "🔄 Actualizar pedidos"; }
+  if (btn) { btn.disabled = false; btn.textContent = "Actualizar pedidos"; }
 }
 
 // ===================== PEDIDO MANUAL (TELEFÓNICO) =====================
@@ -730,7 +730,7 @@ function agregarPedidoManual() {
 
   if (!nombre) return mostrarErrorManual("Ingresá el nombre del cliente.");
   if (tipoEntrega === "entrega" && !direccion) return mostrarErrorManual("Ingresá la dirección de entrega.");
-  if (!fecha || !hora) return mostrarErrorManual("Elegí un día y un horario disponibles (activalos primero en '🕐 Días y horarios' si no hay ninguno).");
+  if (!fecha || !hora) return mostrarErrorManual("Elegí un día y un horario disponibles (activalos primero en 'Agenda' si no hay ninguno).");
 
   const activos = DA.getProductos().filter(p => p.activo);
   const items = [];
