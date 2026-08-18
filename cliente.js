@@ -42,16 +42,23 @@ function renderProductos() {
     const div = document.createElement("div");
     div.className = "prod-card";
 
+    // La foto va dentro de .prod-foto, que ya tiene dibujado el sello de
+    // trigo como fondo. Si el producto no tiene foto cargada, o la foto
+    // no carga, queda el sello a la vista — nunca un cuadro roto.
+    const foto = p.imagen
+      ? `<img src="${p.imagen}" class="prod-img" alt="${p.nombre}" loading="lazy" onerror="this.remove()"/>`
+      : "";
+
     div.innerHTML = `
-      <img src="${p.imagen}" class="prod-img" onerror="this.style.display='none'"/>
+      <div class="prod-foto">${foto}</div>
       <div class="prod-info">
         <div class="prod-nombre">${p.nombre}</div>
         <div class="prod-precio">$${Number(p.precio).toLocaleString("es-AR")}</div>
 
         <div class="cantidad-box">
-          <button class="cantidad-btn" onclick="restar('${p.id}')">-</button>
-          <span>${cantidad}</span>
-          <button class="cantidad-btn" onclick="sumar('${p.id}')">+</button>
+          <button class="cantidad-btn" type="button" aria-label="Quitar uno de ${p.nombre}" onclick="restar('${p.id}')">&minus;</button>
+          <span aria-live="polite">${cantidad}</span>
+          <button class="cantidad-btn" type="button" aria-label="Agregar uno de ${p.nombre}" onclick="sumar('${p.id}')">+</button>
         </div>
       </div>
     `;
@@ -173,8 +180,14 @@ function renderDias() {
     div.innerHTML = d.fechaLabel.replace(",", "<br/>");
     if (d.disponible) {
       div.onclick = () => seleccionarDia(d.fecha);
+      div.tabIndex = 0;
+      div.setAttribute("role", "button");
+      div.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); seleccionarDia(d.fecha); }
+      };
     } else {
       div.title = "Sin cupo este día";
+      div.setAttribute("aria-disabled", "true");
     }
     cont.appendChild(div);
   });
@@ -211,9 +224,12 @@ function renderHorarios() {
     const btn = document.createElement("div");
     btn.className = "horario-btn" + (h === horaElegida ? " sel" : "");
     btn.textContent = h + " hs";
-    btn.onclick = () => {
-      horaElegida = h;
-      renderHorarios();
+    btn.tabIndex = 0;
+    btn.setAttribute("role", "button");
+    const elegir = () => { horaElegida = h; renderHorarios(); };
+    btn.onclick = elegir;
+    btn.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); elegir(); }
     };
     cont.appendChild(btn);
   });
