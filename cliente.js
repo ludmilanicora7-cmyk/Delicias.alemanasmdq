@@ -342,3 +342,69 @@ function nuevoPedido() {
   renderDias();
   irPaso(1);
 }
+
+// ═══════════════════════════════════════════
+// INSTALAR COMO APP
+// ═══════════════════════════════════════════
+// El sitio ya era instalable, pero había que saber ir al menú
+// del navegador y buscar "Instalar app". Nadie lo hace. Esto
+// lo convierte en un botón visible.
+//
+// Android/Chrome avisa con "beforeinstallprompt" cuando se puede
+// instalar; ahí mostramos la barra. iPhone no tiene ese aviso
+// (Apple no lo permite), así que a esos les mostramos el paso
+// a paso del "Agregar a inicio".
+
+let promptInstalacion = null;
+
+function yaEstaInstalada() {
+  return window.matchMedia("(display-mode: standalone)").matches
+      || window.navigator.standalone === true;
+}
+
+function esIphone() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent)
+      && !/crios|fxios/i.test(navigator.userAgent); // solo Safari
+}
+
+function barraDescartada() {
+  try { return localStorage.getItem("da_instalar_no") === "1"; }
+  catch (e) { return false; }
+}
+
+function cerrarBarraInstalar() {
+  document.getElementById("instalarBarra").classList.add("hidden");
+  document.getElementById("instalarIos").classList.add("hidden");
+  try { localStorage.setItem("da_instalar_no", "1"); } catch (e) {}
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();              // no mostrar el cartel propio del navegador
+  promptInstalacion = e;           // lo guardamos para dispararlo con nuestro botón
+  if (!barraDescartada() && !yaEstaInstalada()) {
+    document.getElementById("instalarBarra").classList.remove("hidden");
+  }
+});
+
+async function instalarApp() {
+  if (!promptInstalacion) return;
+  promptInstalacion.prompt();
+  await promptInstalacion.userChoice;
+  promptInstalacion = null;
+  document.getElementById("instalarBarra").classList.add("hidden");
+}
+
+window.addEventListener("appinstalled", () => {
+  document.getElementById("instalarBarra").classList.add("hidden");
+  try { localStorage.setItem("da_instalar_no", "1"); } catch (e) {}
+});
+
+// iPhone: mostramos las instrucciones a los pocos segundos, para
+// no tapar la pantalla apenas entra.
+document.addEventListener("DOMContentLoaded", () => {
+  if (esIphone() && !yaEstaInstalada() && !barraDescartada()) {
+    setTimeout(() => {
+      document.getElementById("instalarIos").classList.remove("hidden");
+    }, 4000);
+  }
+});
