@@ -945,3 +945,34 @@ button {
   gap: .8rem;
   margin-top: .9rem;
 }
+
+/* ═══════════════════════════════════════════
+   ÍCONOS DIBUJADOS
+   ═══════════════════════════════════════════
+   Reemplazan a los emojis del sistema. Motivo: no existe
+   emoji de Brezel, Strudel ni Kreppel — solo magdalenas y
+   tortas genéricas, que no son lo que se hace acá. Además
+   cada teléfono dibuja los emojis distinto; estos se ven
+   idénticos en todos lados. */
+
+.ico {
+  width: 1.35em;
+  height: 1.35em;
+  flex: 0 0 auto;
+  vertical-align: -.28em;
+  margin-right: .5rem;
+  color: var(--oro);
+}
+
+.card h2, .card h3 {
+  display: flex;
+  align-items: center;
+}
+
+/* Dentro de una pestaña activa el ícono va en claro,
+   para que no se pierda contra el borgoña */
+.tab { display: inline-flex; align-items: center; }
+.tab .ico { width: 1.25em; height: 1.25em; margin-right: .45rem; }
+.tab.activo .ico { color: var(--oro-claro); }
+
+.link-btn .ico { width: 1.2em; height: 1.2em; margin-right: .4rem; }
