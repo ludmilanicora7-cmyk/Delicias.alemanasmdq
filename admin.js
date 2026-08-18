@@ -63,7 +63,26 @@ function mostrarPanel() {
   initPanel();
 }
 
+// ===================== PESTAÑAS =====================
+// Guarda la última pestaña abierta: si cerrás y volvés a entrar,
+// arrancás donde estabas.
+function irTab(nombre) {
+  document.querySelectorAll(".tab-panel").forEach(el => {
+    el.classList.toggle("hidden", el.id !== "tab-" + nombre);
+  });
+  document.querySelectorAll(".tab").forEach(el => {
+    const activo = el.dataset.tab === nombre;
+    el.classList.toggle("activo", activo);
+    el.setAttribute("aria-selected", activo ? "true" : "false");
+  });
+  try { sessionStorage.setItem("da_tab", nombre); } catch (e) {}
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function initPanel() {
+  const guardada = (() => { try { return sessionStorage.getItem("da_tab"); } catch (e) { return null; } })();
+  irTab(guardada || "pedidos");
+  renderCaja();
   renderProductos();
   cargarHorarios();
   renderFiltros();
@@ -96,30 +115,90 @@ function renderProductos() {
     const div = document.createElement("div");
     div.className = "prod-item";
 
+    const foto = p.imagen
+      ? `<img src="${p.imagen}" class="prod-foto-mini" alt=""/>`
+      : `<div class="prod-foto-mini prod-foto-vacia">sin foto</div>`;
+
     div.innerHTML = `
-      <div style="display:flex;gap:10px;align-items:center;width:100%">
+      ${foto}
 
-        <img src="${p.imagen}" style="width:50px;height:50px;object-fit:cover;border-radius:8px" onerror="this.style.opacity=0.2"/>
+      <div class="prod-campos">
+        <input value="${p.nombre}" onchange="editProd(${i}, 'nombre', this.value)" aria-label="Nombre del producto"/>
+        <input type="number" value="${p.precio}" onchange="editProd(${i}, 'precio', this.value)" aria-label="Precio"/>
 
-        <div style="flex:1">
-          <input value="${p.nombre}" onchange="editProd(${i}, 'nombre', this.value)"/>
-          <input type="number" value="${p.precio}" onchange="editProd(${i}, 'precio', this.value)"/>
-          <input value="${p.imagen}" onchange="editProd(${i}, 'imagen', this.value)"/>
-
-          <label>
-            <input type="checkbox" ${p.activo ? "checked" : ""} onchange="toggleProd(${i})"/>
-            Activo
+        <div class="prod-acciones">
+          <label class="btn-foto">
+            📷 ${p.imagen ? "Cambiar foto" : "Subir foto"}
+            <input type="file" accept="image/*" onchange="subirFotoProducto(${i}, this)" hidden/>
           </label>
+          ${p.imagen ? `<button class="btn-mini" onclick="quitarFotoProducto(${i})" type="button">Quitar foto</button>` : ""}
         </div>
 
-        <button onclick="delProd(${i})">❌</button>
+        <label class="prod-activo">
+          <input type="checkbox" ${p.activo ? "checked" : ""} onchange="toggleProd(${i})"/>
+          Activo
+        </label>
       </div>
+
+      <button class="btn-x" onclick="delProd(${i})" type="button" aria-label="Eliminar producto">×</button>
     `;
 
     cont.appendChild(div);
   });
 
   if (document.getElementById("manualProductos")) renderProductosManual();
+}
+
+// ===================== FOTOS =====================
+async function subirFotoProducto(i, input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+
+  const etiqueta = input.parentElement;
+  const textoOriginal = etiqueta.firstChild.nodeValue;
+  etiqueta.firstChild.nodeValue = "⏳ Subiendo… ";
+  etiqueta.classList.add("btn-foto-cargando");
+
+  try {
+    const url = await DA.subirFoto(file);
+    productos[i].imagen = url;
+    await DA.saveProductos(productos);
+    renderProductos();
+  } catch (e) {
+    console.error(e);
+    etiqueta.firstChild.nodeValue = textoOriginal;
+    etiqueta.classList.remove("btn-foto-cargando");
+    input.value = "";
+    alert("No se pudo subir la foto.\n\nRevisá que hayas corrido el archivo supabase-fotos.sql, y que tengas conexión.");
+  }
+}
+
+async function quitarFotoProducto(i) {
+  if (!confirm("¿Quitar la foto de este producto?")) return;
+  productos[i].imagen = "";
+  await DA.saveProductos(productos);
+  renderProductos();
+}
+
+async function subirFotoNueva(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+
+  const etiqueta = input.parentElement;
+  const textoOriginal = etiqueta.firstChild.nodeValue;
+  etiqueta.firstChild.nodeValue = "⏳ Subiendo… ";
+
+  try {
+    const url = await DA.subirFoto(file);
+    document.getElementById("imagen").value = url;
+    document.getElementById("previewNueva").innerHTML = `<img src="${url}" class="prod-foto-mini" alt=""/>`;
+    etiqueta.firstChild.nodeValue = "📷 Cambiar foto ";
+  } catch (e) {
+    console.error(e);
+    etiqueta.firstChild.nodeValue = textoOriginal;
+    input.value = "";
+    alert("No se pudo subir la foto.\n\nRevisá que hayas corrido el archivo supabase-fotos.sql, y que tengas conexión.");
+  }
 }
 
 function editProd(i, key, val) {
@@ -142,7 +221,7 @@ function delProd(i) {
 function agregarProducto() {
   const nombre = document.getElementById("nombre").value.trim();
   const precio = document.getElementById("precio").value;
-  const imagen = document.getElementById("imagen").value.trim() || "img/producto.jpg";
+  const imagen = document.getElementById("imagen").value.trim();
 
   if (!nombre || !precio) {
     alert("Completá al menos el nombre y el precio.");
@@ -164,6 +243,13 @@ function agregarProducto() {
   document.getElementById("imagen").value = "";
 
   renderProductos();
+
+  // Dejar el formulario limpio para el siguiente producto
+  document.getElementById("imagen").value = "";
+  const prev = document.getElementById("previewNueva");
+  if (prev) prev.innerHTML = `<div class="prod-foto-mini prod-foto-vacia">sin foto</div>`;
+  const etiqueta = document.querySelector(".foto-nueva-box .btn-foto");
+  if (etiqueta) etiqueta.firstChild.nodeValue = "📷 Subir foto ";
 }
 
 // ===================== HORARIOS =====================
@@ -289,15 +375,58 @@ function renderPedidoCard(p) {
   const telCliente = (p.cliente.tel || "").replace(/\D/g, "");
   const msg = encodeURIComponent(`Hola ${p.cliente.nombre}! Te escribo por tu pedido de Delicias Alemanas para el ${fechaFmt} a las ${p.hora}hs.`);
 
+  const s = DA.saldoPedido(p);
+  const pagos = DA.pagosDePedido(p.id);
+
+  // Estado de cobro: siempre texto, nunca solo un color
+  let cobro;
+  if (s.saldado)        cobro = `<span class="badge badge-pagado">Pagado</span>`;
+  else if (s.pagado > 0) cobro = `<span class="badge badge-parcial">Falta $${money(s.saldo)}</span>`;
+  else                   cobro = `<span class="badge badge-impago">Sin cobrar</span>`;
+
+  const listaPagos = pagos.length ? `
+    <div class="pagos-lista">
+      ${pagos.map(pg => `
+        <div class="pago-row">
+          <span>${fechaCorta(pg.fecha)} · ${pg.metodo === "transferencia" ? "🏦 Transferencia" : "💵 Efectivo"}${pg.nota ? " · " + pg.nota : ""}</span>
+          <span class="pago-monto">$${money(pg.monto)}</span>
+          <button class="btn-x" onclick="borrarPago('${pg.id}')" type="button" aria-label="Eliminar este pago">×</button>
+        </div>
+      `).join("")}
+    </div>` : "";
+
+  const formCobro = s.saldo > 0 ? `
+    <div class="cobro-form">
+      <input type="number" inputmode="decimal" id="monto-${p.id}" placeholder="Monto" value="${s.saldo}"/>
+      <select id="metodo-${p.id}">
+        <option value="efectivo">💵 Efectivo</option>
+        <option value="transferencia">🏦 Transferencia</option>
+      </select>
+      <input type="text" id="nota-${p.id}" placeholder="Seña, saldo…"/>
+      <button class="btn-mini btn-cobrar" onclick="registrarCobro('${p.id}')" type="button">Registrar cobro</button>
+    </div>` : "";
+
   return `
     <div class="pedido-card estado-${p.estado}">
       <div class="pedido-top">
         <strong>${p.cliente.nombre}</strong>
-        <span class="badge badge-${p.estado}">${p.estado}</span>
+        <span class="pedido-etiquetas">
+          <span class="badge badge-${p.estado}">${p.estado}</span>
+          ${cobro}
+        </span>
       </div>
       <div class="pedido-info">${items}</div>
       <div class="pedido-info">📅 ${fechaFmt} · 🕐 ${p.hora}hs · ${p.cliente.tipoEntrega === "entrega" ? "🚚 " + (p.cliente.direccion || "") : "🏠 Retiro en local"}</div>
-      <div class="pedido-info">Total: $${Number(p.total).toLocaleString("es-AR")}</div>
+
+      <div class="pedido-cifras">
+        <div><span>Total</span><strong>$${money(s.total)}</strong></div>
+        <div><span>Cobrado</span><strong>$${money(s.pagado)}</strong></div>
+        <div class="${s.saldo > 0 ? "cifra-pendiente" : ""}"><span>Falta</span><strong>$${money(s.saldo)}</strong></div>
+      </div>
+
+      ${listaPagos}
+      ${formCobro}
+
       <div class="pedido-botones">
         <a class="btn-mini" href="https://wa.me/${telCliente}?text=${msg}" target="_blank">💬 WhatsApp</a>
         ${p.estado !== "entregado" ? `<button class="btn-mini" onclick="cambiarEstadoPedido('${p.id}','entregado')" type="button">✅ Entregado</button>` : ""}
@@ -308,15 +437,140 @@ function renderPedidoCard(p) {
   `;
 }
 
+// ===================== COBROS =====================
+function money(n) {
+  return Number(n || 0).toLocaleString("es-AR", { maximumFractionDigits: 2 });
+}
+
+function fechaCorta(iso) {
+  return new Date(iso + "T12:00:00").toLocaleDateString("es-AR", { day: "numeric", month: "short" });
+}
+
+async function registrarCobro(pedidoId) {
+  const monto  = parseFloat(document.getElementById("monto-" + pedidoId).value);
+  const metodo = document.getElementById("metodo-" + pedidoId).value;
+  const nota   = document.getElementById("nota-" + pedidoId).value.trim();
+
+  if (!monto || monto <= 0) {
+    alert("Ingresá un monto mayor a cero.");
+    return;
+  }
+
+  const ok = await DA.agregarPago({ pedidoId, monto, metodo, nota, fecha: DA.hoyISO() });
+  if (!ok) {
+    alert("No se pudo guardar el cobro. Revisá tu conexión y probá de nuevo.");
+    return;
+  }
+
+  renderPedidos();
+  renderCaja();
+}
+
+async function borrarPago(id) {
+  if (!confirm("¿Eliminar este pago? El total del mes se va a recalcular.")) return;
+  await DA.eliminarPago(id);
+  renderPedidos();
+  renderCaja();
+}
+
 function cambiarEstadoPedido(id, estado) {
   DA.actualizarEstadoPedido(id, estado);
   renderPedidos();
+  renderCaja();
 }
 
 function eliminarPedido(id) {
   if (!confirm("¿Eliminar este pedido?")) return;
   DA.eliminarPedido(id);
   renderPedidos();
+  renderCaja();
+}
+
+// ===================== CAJA =====================
+function renderCaja() {
+  renderResumenMeses();
+  renderDeudores();
+  renderUltimosPagos();
+}
+
+function renderResumenMeses() {
+  const cont = document.getElementById("resumenMeses");
+  if (!cont) return;
+
+  const meses = DA.resumenPorMes();
+
+  if (!meses.length) {
+    cont.innerHTML = `<p class="ayuda">Todavía no registraste ningún cobro. Cuando cargues el primero desde la pestaña Pedidos, acá vas a ver el total de cada mes.</p>`;
+    return;
+  }
+
+  cont.innerHTML = meses.map((m, i) => `
+    <div class="mes-card ${i === 0 ? "mes-actual" : ""}">
+      <div class="mes-top">
+        <span class="mes-nombre">${m.etiqueta}</span>
+        <strong class="mes-total">$${money(m.total)}</strong>
+      </div>
+      <div class="mes-detalle">
+        <span>💵 Efectivo $${money(m.efectivo)}</span>
+        <span>🏦 Transferencia $${money(m.transferencia)}</span>
+        <span>${m.cantidad} ${m.cantidad === 1 ? "cobro" : "cobros"}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderDeudores() {
+  const cont = document.getElementById("listaDeudores");
+  if (!cont) return;
+
+  const pendientes = DA.pedidosConSaldo();
+
+  if (!pendientes.length) {
+    cont.innerHTML = `<p class="ayuda">No hay saldos pendientes. Está todo cobrado.</p>`;
+    return;
+  }
+
+  const totalDeuda = pendientes.reduce((acc, p) => acc + p._saldo.saldo, 0);
+
+  cont.innerHTML = `
+    <div class="deuda-total">Te deben en total <strong>$${money(totalDeuda)}</strong></div>
+    ${pendientes.map(p => `
+      <div class="deudor-row">
+        <div>
+          <strong>${p.cliente.nombre}</strong>
+          <div class="ayuda-mini">${fechaCorta(p.fecha)} · pagó $${money(p._saldo.pagado)} de $${money(p._saldo.total)}</div>
+        </div>
+        <span class="deudor-monto">$${money(p._saldo.saldo)}</span>
+      </div>
+    `).join("")}
+  `;
+}
+
+function renderUltimosPagos() {
+  const cont = document.getElementById("listaPagos");
+  if (!cont) return;
+
+  const pagos = DA.getPagos().slice(0, 25);
+
+  if (!pagos.length) {
+    cont.innerHTML = `<p class="ayuda">Sin movimientos todavía.</p>`;
+    return;
+  }
+
+  const pedidos = DA.getPedidos();
+
+  cont.innerHTML = pagos.map(pg => {
+    const ped = pedidos.find(x => x.id === pg.pedidoId);
+    return `
+      <div class="pago-row pago-row-suelto">
+        <span>
+          <strong>${ped ? ped.cliente.nombre : "Pedido eliminado"}</strong>
+          <div class="ayuda-mini">${fechaCorta(pg.fecha)} · ${pg.metodo === "transferencia" ? "🏦 Transferencia" : "💵 Efectivo"}${pg.nota ? " · " + pg.nota : ""}</div>
+        </span>
+        <span class="pago-monto">$${money(pg.monto)}</span>
+      </div>
+    `;
+  }).join("");
 }
 
 // ===================== NEGOCIO =====================
