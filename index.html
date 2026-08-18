@@ -22,9 +22,6 @@
 <body>
 
 <header class="hero">
-  <div class="bandera-lateral bandera-arg-lateral" aria-hidden="true"></div>
-  <div class="bandera-lateral bandera-ale-lateral" aria-hidden="true"></div>
-
   <svg class="sol-arg" viewBox="0 0 40 40" aria-hidden="true">
     <g stroke="#B98514" stroke-width="1.1" stroke-linecap="round">
       <path d="M20 3v4M20 33v4M3 20h4M33 20h4M8 8l2.8 2.8M29.2 29.2L32 32M32 8l-2.8 2.8M10.8 29.2L8 32"/>
@@ -44,10 +41,21 @@
   <h1 class="hero-title">Delicias Alemanas</h1>
   <p class="hero-sub">Pastelería alemana artesanal · Mar del Plata</p>
 
-  <!-- Espigas de trigo: los alemanes del Volga trajeron el trigo a la Argentina -->
+  <!-- Escarapelas: alemana y argentina, con la espiga del Volga al medio -->
   <div class="motivo-decorativo" aria-hidden="true">
     <span class="filete"></span>
-    <svg viewBox="0 0 60 80" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+
+    <svg class="medallon" viewBox="0 0 44 44">
+      <circle cx="22" cy="22" r="20" fill="#F3EDDF" stroke="#A8842C" stroke-width="1.6"/>
+      <clipPath id="recorteAle"><circle cx="22" cy="22" r="15"/></clipPath>
+      <g clip-path="url(#recorteAle)">
+        <rect x="7" y="7"  width="30" height="10" fill="#16130E"/>
+        <rect x="7" y="17" width="30" height="10" fill="#C8102E"/>
+        <rect x="7" y="27" width="30" height="10" fill="#E8B800"/>
+      </g>
+    </svg>
+
+    <svg class="espiga" viewBox="0 0 60 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
       <path d="M30 76V26"/>
       <path d="M30 30c-7-2.5-11-8.5-11-15 6.5 0 11 4 11 10z"/>
       <path d="M30 30c7-2.5 11-8.5 11-15-6.5 0-11 4-11 10z"/>
@@ -55,8 +63,19 @@
       <path d="M30 43c7-2.5 11-8.5 11-15-6.5 0-11 4-11 10z"/>
       <path d="M30 56c-7-2.5-11-8.5-11-15 6.5 0 11 4 11 10z"/>
       <path d="M30 56c7-2.5 11-8.5 11-15-6.5 0-11 4-11 10z"/>
-      <path d="M30 20c0-6 2-11 5-14"/>
     </svg>
+
+    <svg class="medallon" viewBox="0 0 44 44">
+      <circle cx="22" cy="22" r="20" fill="#F3EDDF" stroke="#A8842C" stroke-width="1.6"/>
+      <clipPath id="recorteArg"><circle cx="22" cy="22" r="15"/></clipPath>
+      <g clip-path="url(#recorteArg)">
+        <rect x="7" y="7"  width="30" height="10" fill="#7BA7CE"/>
+        <rect x="7" y="17" width="30" height="10" fill="#FFFFFF"/>
+        <rect x="7" y="27" width="30" height="10" fill="#7BA7CE"/>
+        <circle cx="22" cy="22" r="3.4" fill="#E9A81C"/>
+      </g>
+    </svg>
+
     <span class="filete"></span>
   </div>
 </header>
