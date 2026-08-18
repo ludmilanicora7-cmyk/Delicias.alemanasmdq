@@ -81,6 +81,30 @@
 </header>
 <div class="cinta-alemana"></div>
 
+<!-- Barra de instalación. Aparece sola solo si el celular puede
+     instalar la app y todavía no la tiene. -->
+<div class="instalar-barra hidden" id="instalarBarra">
+  <div class="instalar-texto">
+    <strong>Tenela siempre a mano</strong>
+    <span>Instalá la app y pedí con un toque, sin buscar el link</span>
+  </div>
+  <div class="instalar-acciones">
+    <button class="btn-instalar" id="btnInstalar" onclick="instalarApp()" type="button">Instalar</button>
+    <button class="btn-cerrar-barra" onclick="cerrarBarraInstalar()" type="button" aria-label="Ahora no">Ahora no</button>
+  </div>
+</div>
+
+<!-- Instrucciones para iPhone: Apple no permite instalar de un toque -->
+<div class="instalar-ios hidden" id="instalarIos">
+  <p><strong>Para tenerla en tu iPhone</strong></p>
+  <ol>
+    <li>Tocá el botón de compartir, abajo en el centro de la pantalla</li>
+    <li>Deslizá y elegí <strong>Agregar a inicio</strong></li>
+    <li>Tocá <strong>Agregar</strong></li>
+  </ol>
+  <button class="btn-cerrar-barra" onclick="cerrarBarraInstalar()" type="button">Entendido</button>
+</div>
+
 <main class="main">
 
   <!-- ===================== PASO 1: PRODUCTOS ===================== -->
