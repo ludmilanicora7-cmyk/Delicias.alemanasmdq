@@ -4,7 +4,7 @@
 // y que sigan funcionando sin conexión una vez cargadas.
 // ═══════════════════════════════════════
 
-const CACHE_NAME = "delicias-cache-v10";
+const CACHE_NAME = "delicias-cache-v5";
 
 const ASSETS = [
   "./index.html",
@@ -18,8 +18,8 @@ const ASSETS = [
   "./logo.jpg",
   "./manifest-cliente.json",
   "./manifest-admin.json",
-  "./icon-192.png",
-  "./icon-512.png"
+  "./icons/icon-192.png",
+  "./icons/icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
@@ -40,23 +40,23 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Estrategia: responder del cache primero (rápido y offline), y actualizar en segundo plano.
+// Estrategia: red primero (así siempre ves la versión más nueva si hay
+// internet), y si no hay conexión, recién ahí usa lo que tenga guardado.
+// (Antes era al revés — por eso a veces se veía una versión vieja "pegada"
+// aunque ya hubiera una nueva: mostraba el cache y recién actualizaba
+// ese cache para la PRÓXIMA vez, nunca la que estabas viendo.)
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const network = fetch(event.request)
-        .then((res) => {
-          if (res && res.status === 200) {
-            const copia = res.clone();
-            caches.open(CACHE_NAME).then((c) => c.put(event.request, copia));
-          }
-          return res;
-        })
-        .catch(() => cached);
-
-      return cached || network;
-    })
+    fetch(event.request)
+      .then((res) => {
+        if (res && res.status === 200) {
+          const copia = res.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(event.request, copia));
+        }
+        return res;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
